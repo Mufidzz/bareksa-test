@@ -13,14 +13,7 @@ func main() {
 		log.Printf("[DB Init] error initialize database, trace %v", err)
 	}
 
-	res, err := postgreRepo.CreateBulkTopics([]presentation.CreateBulkTopicsRequest{
-		{
-			"AAA",
-		},
-		{
-			"BBB",
-		},
-	})
+	res, err := postgreRepo.GetBulkNewsTopics(nil, &presentation.NewsTopicFilter{Name: "ASDADW"})
 
 	fmt.Println(res, err)
 }

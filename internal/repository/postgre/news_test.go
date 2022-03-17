@@ -12,6 +12,7 @@ import (
 	"time"
 )
 
+//TODO : UPDATE
 func Test_CreateNews(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -79,6 +80,7 @@ func Test_CreateNews(t *testing.T) {
 
 }
 
+//TODO : UPDATE
 func Test_GetNews(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -201,6 +203,7 @@ func Test_GetNews(t *testing.T) {
 	})
 }
 
+//TODO : UPDATE
 func Test_UpdateNews(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
@@ -332,6 +335,7 @@ func Test_UpdateNews(t *testing.T) {
 	})
 }
 
+//TODO : UPDATE
 func Test_DeleteBulkNews(t *testing.T) {
 	db, mock, err := sqlmock.New()
 	if err != nil {
