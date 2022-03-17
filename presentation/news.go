@@ -25,3 +25,10 @@ type CreateBulkNewsRequest struct {
 	Content string `db:"content"`
 	Status  int    `db:"status"`
 }
+
+type UpdateNewsRequest struct {
+	ID      int    `db:"id"`
+	Title   string `db:"title"`
+	Content string `db:"content"`
+	Status  int    `db:"status"`
+}
