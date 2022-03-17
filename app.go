@@ -13,20 +13,10 @@ func main() {
 		log.Printf("[DB Init] error initialize database, trace %v", err)
 	}
 
-	res, err := postgreRepo.UpdateBulkNews([]presentation.UpdateNewsRequest{
-		{
-			ID:      1,
-			Title:   "BCDE",
-			Content: "AAAA",
-			Status:  1,
-		},
-		{
-			ID:      2,
-			Title:   "ADASD",
-			Content: "ASDSDWQRE",
-			Status:  1,
-		},
-	})
+	res, err := postgreRepo.GetBulkNews(presentation.Pagination{
+		Offset: 0,
+		Count:  1,
+	}, nil)
 
 	fmt.Println(res, err)
 }
