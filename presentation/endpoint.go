@@ -11,6 +11,11 @@ type NewsTopicFilter struct {
 	NewsTopicID int    `json:"news_topic_id"`
 }
 
+type NewsTagsFilter struct {
+	Name        string `json:"name"`
+	NewsTopicID int    `json:"news_topic_id"`
+}
+
 type Pagination struct {
 	Offset int64 `json:"offset"`
 	Count  int64 `json:"count"`

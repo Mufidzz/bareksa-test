@@ -224,6 +224,31 @@ func Test_GetBulkNewsTopics(t *testing.T) {
 			}.Error())
 		}
 	})
+
+	// Success #5 - Filter Topics ID & Name No Pagination
+	t.Run("Success #5 - Filter Topics ID & Name No Pagination", func(tt *testing.T) {
+
+		rows := sqlmock.NewRows([]string{"id", "name"}).
+			AddRow(1, "ABCDE")
+
+		mock.ExpectQuery("SELECT (.+) FROM news_topics (.+)").
+			WithArgs(1, "ABCDE").
+			WillReturnRows(rows)
+
+		_, err = pgDB.GetBulkNewsTopics(nil, &presentation.NewsTopicFilter{
+			NewsTopicID: 1,
+			Name:        "ABCDE",
+		})
+
+		if err != nil {
+			tt.Error(response.InternalTestError{
+				Name:         tt.Name(),
+				FunctionName: "Test_GetBulkNewsTopics",
+				Description:  "Error Not Expected From Function",
+				Trace:        err,
+			}.Error())
+		}
+	})
 }
 
 func Test_UpdateBulkNewsTopics(t *testing.T) {
