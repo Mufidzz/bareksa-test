@@ -123,3 +123,50 @@ func (db *Postgre) GetNews(pagination presentation.Pagination, filter *presentat
 
 	return res, nil
 }
+
+func (db *Postgre) UpdateBulkNews(in []presentation.UpdateNewsRequest) (updatedID []int, err error) {
+	q := `UPDATE news SET title = new_news.title, content = new_news.content, status = new_news.status, updated_at = now() FROM (VALUES %s) as new_news (id, title, content, status) WHERE news.id = new_news.id RETURNING news.id`
+
+	queryParamLen := 4
+
+	queryValues := ""
+	paramCount := 1
+	paramArgs := []interface{}{}
+
+	for _, v := range in {
+		queryValues = fmt.Sprintf("%s($%d::BIGINT, $%d::TEXT, $%d::TEXT, $%d::INTEGER),", queryValues, paramCount, paramCount+1, paramCount+2, paramCount+3)
+		paramArgs = append(paramArgs, v.ID, v.Title, v.Content, v.Status)
+		paramCount += queryParamLen
+	}
+
+	q = fmt.Sprintf(q, queryValues[:len(queryValues)-1])
+
+	rows, err := db.newsDatabase.Master.Queryx(q, paramArgs...)
+	if err != nil {
+		return nil, response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "UpdateBulkNews",
+			Description:  "failed running queryx",
+			Trace:        err,
+		}.Error()
+	}
+
+	for rows.Next() {
+		var id int
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, response.InternalError{
+				Type:         "Repo",
+				Name:         "Postgre",
+				FunctionName: "UpdateBulkNews",
+				Description:  "failed scan",
+				Trace:        err,
+			}.Error()
+		}
+
+		updatedID = append(updatedID, id)
+	}
+
+	return updatedID, nil
+}
