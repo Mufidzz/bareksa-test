@@ -13,10 +13,14 @@ func main() {
 		log.Printf("[DB Init] error initialize database, trace %v", err)
 	}
 
-	res, err := postgreRepo.GetBulkNews(presentation.Pagination{
-		Offset: 0,
-		Count:  1,
-	}, nil)
+	res, err := postgreRepo.CreateBulkTopics([]presentation.CreateBulkTopicsRequest{
+		{
+			"AAA",
+		},
+		{
+			"BBB",
+		},
+	})
 
 	fmt.Println(res, err)
 }
