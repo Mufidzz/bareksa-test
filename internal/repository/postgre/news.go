@@ -55,7 +55,7 @@ func (db *Postgre) CreateBulkNews(in []presentation.CreateBulkNewsRequest) (inse
 	return insertedID, nil
 }
 
-func (db *Postgre) GetNews(pagination presentation.Pagination, filter *presentation.NewsFilter) (res []presentation.GetNewsResponse, err error) {
+func (db *Postgre) GetBulkNews(pagination presentation.Pagination, filter *presentation.NewsFilter) (res []presentation.GetNewsResponse, err error) {
 	q := `SELECT news.id, news.created_at, news.updated_at, news.title, news.content, string_agg(DISTINCT topics.name, ', ') as topics_name, string_agg(DISTINCT tags.name, ', ') as tags_name, news.status FROM news
 			INNER JOIN assoc_news_topics aTopics on news.id = aTopics.news_id
             LEFT JOIN news_topics topics on aTopics.news_topic_id = topics.id
@@ -98,7 +98,7 @@ func (db *Postgre) GetNews(pagination presentation.Pagination, filter *presentat
 		return nil, response.InternalError{
 			Type:         "Repo",
 			Name:         "Postgre",
-			FunctionName: "GetNews",
+			FunctionName: "GetBulkNews",
 			Description:  "failed running queryx",
 			Trace:        err,
 		}.Error()
@@ -112,7 +112,7 @@ func (db *Postgre) GetNews(pagination presentation.Pagination, filter *presentat
 			return nil, response.InternalError{
 				Type:         "Repo",
 				Name:         "Postgre",
-				FunctionName: "GetNews",
+				FunctionName: "GetBulkNews",
 				Description:  "failed scan",
 				Trace:        err,
 			}.Error()
@@ -169,4 +169,37 @@ func (db *Postgre) UpdateBulkNews(in []presentation.UpdateNewsRequest) (updatedI
 	}
 
 	return updatedID, nil
+}
+
+func (db *Postgre) DeleteBulkNews(newsID []int) (deletedID []int, err error) {
+	q := `DELETE FROM news WHERE id = ANY($1) RETURNING id`
+
+	rows, err := db.newsDatabase.Master.Queryx(q, pq.Array(newsID))
+	if err != nil {
+		return nil, response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "DeleteBulkNews",
+			Description:  "failed running queryx",
+			Trace:        err,
+		}.Error()
+	}
+
+	for rows.Next() {
+		var id int
+		err = rows.Scan(&id)
+		if err != nil {
+			return nil, response.InternalError{
+				Type:         "Repo",
+				Name:         "Postgre",
+				FunctionName: "DeleteBulkNews",
+				Description:  "failed scan",
+				Trace:        err,
+			}.Error()
+		}
+
+		deletedID = append(deletedID, id)
+	}
+
+	return deletedID, nil
 }
