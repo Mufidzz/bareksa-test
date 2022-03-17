@@ -86,7 +86,7 @@ func Test_GetBulkNewsTags(t *testing.T) {
 		filter     *presentation.NewsTagsFilter
 		pagination *presentation.Pagination
 		mockExp    func(mm sqlmock.Sqlmock)
-		mustReturn []int
+		mustReturn []presentation.GetNewsTagsResponse
 		mustErr    bool
 	}{
 		{
@@ -101,19 +101,96 @@ func Test_GetBulkNewsTags(t *testing.T) {
 			mustErr:    true,
 		},
 		{
-			name: "Success - Success Create New Rows",
+			name: "Success #1 - No Filter, No Pagination",
 			mockExp: func(mm sqlmock.Sqlmock) {
-				rows := sqlmock.NewRows([]string{"id"}).
-					AddRow(1).
-					AddRow(2)
+				rows := sqlmock.NewRows([]string{"id", "name"}).
+					AddRow(1, "AVC").
+					AddRow(2, "AVC")
 
 				mm.ExpectQuery("SELECT (.+) FROM news_tags").
 					WillReturnRows(rows)
 			},
 			filter:     nil,
 			pagination: nil,
-			mustReturn: []int{1, 2},
-			mustErr:    false,
+			mustReturn: []presentation.GetNewsTagsResponse{
+				{ID: 1, Name: "AVC"},
+				{ID: 2, Name: "AVC"},
+			},
+			mustErr: false,
+		},
+		{
+			name: "Success #2 - No Filter",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				rows := sqlmock.NewRows([]string{"id", "name"}).
+					AddRow(1, "AVC")
+
+				mm.ExpectQuery("SELECT (.+) FROM news_tags").
+					WillReturnRows(rows)
+			},
+			filter: nil,
+			pagination: &presentation.Pagination{
+				Offset: 0,
+				Count:  1,
+			},
+			mustReturn: []presentation.GetNewsTagsResponse{
+				{ID: 1, Name: "AVC"},
+			},
+			mustErr: false,
+		},
+		{
+			name: "Success #3 - No Pagination",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				rows := sqlmock.NewRows([]string{"id", "name"}).
+					AddRow(1, "AVC")
+
+				mm.ExpectQuery("SELECT (.+) FROM news_tags").
+					WillReturnRows(rows)
+			},
+			filter: &presentation.NewsTagsFilter{
+				Name:        "ASDASD",
+				NewsTopicID: 1,
+			},
+			pagination: nil,
+			mustReturn: []presentation.GetNewsTagsResponse{
+				{ID: 1, Name: "AVC"},
+			},
+			mustErr: false,
+		},
+		{
+			name: "Success #4 - Filter Name",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				rows := sqlmock.NewRows([]string{"id", "name"}).
+					AddRow(1, "ASDASD")
+
+				mm.ExpectQuery("SELECT (.+) FROM news_tags").
+					WillReturnRows(rows)
+			},
+			filter: &presentation.NewsTagsFilter{
+				Name: "ASDASD",
+			},
+			pagination: nil,
+			mustReturn: []presentation.GetNewsTagsResponse{
+				{ID: 1, Name: "ASDASD"},
+			},
+			mustErr: false,
+		},
+		{
+			name: "Success #5 - Filter ID",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				rows := sqlmock.NewRows([]string{"id", "name"}).
+					AddRow(1, "ASDASD")
+
+				mm.ExpectQuery("SELECT (.+) FROM news_tags").
+					WillReturnRows(rows)
+			},
+			filter: &presentation.NewsTagsFilter{
+				NewsTopicID: 1,
+			},
+			pagination: nil,
+			mustReturn: []presentation.GetNewsTagsResponse{
+				{ID: 1, Name: "ASDASD"},
+			},
+			mustErr: false,
 		},
 	}
 
@@ -125,7 +202,7 @@ func Test_GetBulkNewsTags(t *testing.T) {
 			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
-					FunctionName: "Test_CreateBulkNewsTags",
+					FunctionName: "Test_GetBulkNewsTags",
 					Description:  "Testcase run unsuccessfully",
 					Trace:        fmt.Sprintf("got %v, expected %v, mustErr %v, err %v", res, tc.mustReturn, tc.mustErr, err),
 				}.Error())
@@ -244,7 +321,7 @@ func Test_DeleteBulkNewsTags(t *testing.T) {
 				rows := sqlmock.NewRows([]string{"id"}).
 					AddRow(1).
 					AddRow(2)
-				mm.ExpectQuery("DELETE FROM news_topics WHERE (.+)").
+				mm.ExpectQuery("DELETE FROM news_tags WHERE (.+)").
 					WillReturnRows(rows)
 			},
 			in:         []int{1, 2, 3, 4},
