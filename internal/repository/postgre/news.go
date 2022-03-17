@@ -69,8 +69,8 @@ func (db *Postgre) GetBulkNews(pagination presentation.Pagination, filter *prese
 	if filter != nil {
 		if filter.NewsID != 0 {
 			paramCount += 1
-			q = dbutils.AddCustomFilter(q, dbutils.CONNECTOR_AND, "news.id", dbutils.COMPARATOR_EQUAL, fmt.Sprintf("ANY($%d)", paramCount))
-			paramArgs = append(paramArgs, filter.Status)
+			q = dbutils.AddFilter(q, dbutils.CONNECTOR_AND, "news.id", dbutils.COMPARATOR_EQUAL, paramCount)
+			paramArgs = append(paramArgs, filter.NewsID)
 		}
 
 		if filter.Status != 0 {
