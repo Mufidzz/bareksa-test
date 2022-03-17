@@ -27,6 +27,15 @@ func New(
 	}, nil
 }
 
+func NewWithDBObject(
+	newsDatabase *PgDB,
+) *Postgre {
+	return &Postgre{
+		newsDatabase: newsDatabase,
+	}
+
+}
+
 type PgDB struct {
 	Master *sqlx.DB
 

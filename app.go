@@ -1,7 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"Test_Bareksa/internal/repository/postgre"
+	"Test_Bareksa/presentation"
+	"fmt"
+	"log"
+)
 
 func main() {
-	fmt.Println("Hello")
+	postgreRepo, err := postgre.New("user=tes_bareksa password=tes_bareksa dbname=tes_bareksa host=139.162.36.125 sslmode=disable")
+	if err != nil {
+		log.Printf("[DB Init] error initialize database, trace %v", err)
+	}
+
+	res, err := postgreRepo.GetBulkNews(presentation.Pagination{
+		Offset: 0,
+		Count:  1,
+	}, nil)
+
+	fmt.Println(res, err)
 }
