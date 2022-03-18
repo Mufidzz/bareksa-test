@@ -194,7 +194,7 @@ func (db *Postgre) DeleteBulkNewsTopics(newsTopicID []int) (deletedID []int, err
 }
 
 func (db *Postgre) CreateBulkNewsTopicsAssoc(in []presentation.CreateNewsTopicsAssoc) (err error) {
-	q := `INSERT INTO assoc_news_topics (news_id, news_tag_id) VALUES`
+	q := `INSERT INTO assoc_news_topics (news_id, news_topic_id) VALUES`
 
 	queryParamLen := 2
 
