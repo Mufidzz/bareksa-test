@@ -201,6 +201,27 @@ func Test_GetNews(t *testing.T) {
 			}.Error())
 		}
 	})
+
+	// Success #5 - With Filter Title
+	t.Run("Success #5 - With Filter Title", func(tt *testing.T) {
+		rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "title", "content", "topics_name", "tags_name", "status"}).
+			AddRow(1, now, now, "abc", "xyz", "asd", "asd", 1)
+
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+			WithArgs("%TEST%", defaultPagination.Count, defaultPagination.Offset).
+			WillReturnRows(rows)
+
+		_, err = pgDB.GetBulkNews(defaultPagination, &presentation.NewsFilter{Title: "TEST"})
+
+		if err != nil {
+			tt.Error(response.InternalTestError{
+				Name:         "Success #5 - With Filter Title",
+				FunctionName: "Test_GetNews",
+				Description:  "Error Not Expected From Function",
+				Trace:        err,
+			}.Error())
+		}
+	})
 }
 
 //TODO : UPDATE

@@ -76,9 +76,10 @@ func Test_EncodeStruct(t *testing.T) {
 				Status: 1,
 				Topics: []int{1, 2, 3, 4},
 				NewsID: 2,
+				Title:  "X",
 			},
 			mustErr:    false,
-			mustReturn: "eyJzdGF0dXMiOjEsInRvcGljcyI6WzEsMiwzLDRdLCJuZXdzX2lkIjoyfQ--",
+			mustReturn: "eyJzdGF0dXMiOjEsInRvcGljcyI6WzEsMiwzLDRdLCJuZXdzX2lkIjoyLCJ0aXRsZSI6IlgifQ--",
 		},
 	}
 

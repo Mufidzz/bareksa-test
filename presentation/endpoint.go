@@ -1,9 +1,10 @@
 package presentation
 
 type NewsFilter struct {
-	Status int   `json:"status"`
-	Topics []int `json:"topics"`
-	NewsID int   `json:"news_id"`
+	Status int    `json:"status"`
+	Topics []int  `json:"topics"`
+	NewsID int    `json:"news_id"`
+	Title  string `json:"title"`
 }
 
 type NewsTopicFilter struct {
