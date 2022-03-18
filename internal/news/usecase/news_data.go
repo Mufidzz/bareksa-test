@@ -70,3 +70,7 @@ func (uc *Usecase) GetNews(paginationString, filterString string) (res []present
 
 	return uc.repositories.GetBulkNews(pagination, newsFilter)
 }
+
+func (uc *Usecase) AssignNewsWithNewsTopic(newsId int, topicIDs []int) {
+
+}
