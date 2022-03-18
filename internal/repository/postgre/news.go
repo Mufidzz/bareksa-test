@@ -6,7 +6,6 @@ import (
 	"github.com/Mufidzz/bareksa-test/pkg/response"
 	"github.com/Mufidzz/bareksa-test/presentation"
 	"github.com/lib/pq"
-	"log"
 )
 
 func (db *Postgre) CreateBulkNews(in []presentation.CreateNewsRequest) (insertedID []int, err error) {
@@ -92,8 +91,6 @@ func (db *Postgre) GetBulkNews(pagination presentation.Pagination, filter *prese
 			paramArgs = append(paramArgs, fmt.Sprintf("%%%s%%", filter.Title))
 		}
 	}
-
-	log.Println(q)
 
 	// Implement Grouping
 	q = fmt.Sprintf("%s GROUP BY %s", q, "news.id")
