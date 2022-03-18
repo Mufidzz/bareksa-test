@@ -15,3 +15,10 @@ type NewsTopicDataRepository interface {
 	UpdateBulkNewsTopics(in []presentation.UpdateNewsTopicsRequest) (updatedID []int, err error)
 	DeleteBulkNewsTopics(newsTopicID []int) (deletedID []int, err error)
 }
+
+type NewsTagDataRepository interface {
+	CreateBulkNewsTags(in []presentation.CreateBulkTagsRequest) (insertedID []int, err error)
+	GetBulkNewsTags(pagination *presentation.Pagination, filter *presentation.NewsTagsFilter) (res []presentation.GetNewsTagsResponse, err error)
+	UpdateBulkNewsTags(in []presentation.UpdateNewsTagsRequest) (updatedID []int, err error)
+	DeleteBulkNewsTags(newsTopicID []int) (deletedID []int, err error)
+}
