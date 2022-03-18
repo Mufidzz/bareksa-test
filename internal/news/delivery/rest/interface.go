@@ -16,3 +16,10 @@ type NewsTopicDataUC interface {
 	UpdateNewsTopics(newNewsTopics []presentation.UpdateNewsTopicsRequest) (updatedID []int, err error)
 	GetNewsTopics(paginationString, filterString string) (res []presentation.GetNewsTopicsResponse, err error)
 }
+
+type NewsTagDataUC interface {
+	CreateNewsTags(in []presentation.CreateNewsTagsRequest) (insertedID []int, err error)
+	DeleteNewsTags(newsTopicID []int) (deletedID []int, err error)
+	UpdateNewsTags(newNewsTags []presentation.UpdateNewsTagsRequest) (updatedID []int, err error)
+	GetNewsTags(paginationString, filterString string) (res []presentation.GetNewsTagsResponse, err error)
+}

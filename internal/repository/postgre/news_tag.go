@@ -8,7 +8,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (db *Postgre) CreateBulkNewsTags(in []presentation.CreateBulkTagsRequest) (insertedID []int, err error) {
+func (db *Postgre) CreateBulkNewsTags(in []presentation.CreateNewsTagsRequest) (insertedID []int, err error) {
 	q := `INSERT INTO news_tags (name) VALUES`
 
 	queryParamLen := 1
@@ -63,10 +63,10 @@ func (db *Postgre) GetBulkNewsTags(pagination *presentation.Pagination, filter *
 
 	// Apply Filter if Available
 	if filter != nil {
-		if filter.NewsTopicID != 0 {
+		if filter.NewsTagID != 0 {
 			paramCount += 1
 			q = dbutils.AddFilter(q, dbutils.CONNECTOR_AND, "id", dbutils.COMPARATOR_EQUAL, paramCount)
-			paramArgs = append(paramArgs, filter.NewsTopicID)
+			paramArgs = append(paramArgs, filter.NewsTagID)
 		}
 
 		if filter.Name != "" {

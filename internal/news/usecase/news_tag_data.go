@@ -6,7 +6,7 @@ import (
 	"github.com/Mufidzz/bareksa-test/presentation"
 )
 
-func (uc *Usecase) CreateNewsTags(in []presentation.CreateBulkTagsRequest) (insertedID []int, err error) {
+func (uc *Usecase) CreateNewsTags(in []presentation.CreateNewsTagsRequest) (insertedID []int, err error) {
 	return uc.repositories.CreateBulkNewsTags(in)
 }
 func (uc *Usecase) DeleteNewsTags(newsTopicID []int) (deletedID []int, err error) {
@@ -15,7 +15,6 @@ func (uc *Usecase) DeleteNewsTags(newsTopicID []int) (deletedID []int, err error
 func (uc *Usecase) UpdateNewsTags(newNewsTags []presentation.UpdateNewsTagsRequest) (updatedID []int, err error) {
 	return uc.repositories.UpdateBulkNewsTags(newNewsTags)
 }
-
 func (uc *Usecase) GetNewsTags(paginationString, filterString string) (res []presentation.GetNewsTagsResponse, err error) {
 	var pagination *presentation.Pagination
 	var filter *presentation.NewsTagsFilter

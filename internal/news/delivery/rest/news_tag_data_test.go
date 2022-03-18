@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func Test_HandleCreateNewsTopic(t *testing.T) {
+func Test_HandleCreateNewsTag(t *testing.T) {
 	testcases := []struct {
 		name           string
 		url            string
@@ -33,33 +33,33 @@ func Test_HandleCreateNewsTopic(t *testing.T) {
 			},
 			mustReturnCode: http.StatusBadRequest,
 			body:           "",
-			url:            "/news-topic",
-			handler:        NewHTTP(nil, nil, &MockNewsTopicDataUC{}, nil),
+			url:            "/news-tag",
+			handler:        NewHTTP(nil, nil, nil, &MockNewsTagDataUC{}),
 		},
 		{
 			name: "Failed - Usecase Return Error",
 			mustReturn: response.ErrorResponse{
 				Success: false,
-				Message: "Failed Run Create News Topics",
+				Message: "Failed Run Create News Tags",
 				Type:    0,
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusBadRequest,
 			body:           `[{"name" : "A"}, {"name" : "B"}]`,
-			url:            "/news-topic",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				createNewsTopics: createNewsTopics{err: fmt.Errorf("a")},
-			}, nil),
+			url:            "/news-tag",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				createNewsTags: createNewsTags{err: fmt.Errorf("a")},
+			}),
 		},
 		{
 			name:           "Success",
 			mustReturn:     "",
 			mustReturnCode: http.StatusNoContent,
 			body:           `[{"name" : "A"}, {"name" : "B"}]`,
-			url:            "/news-topic",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				createNewsTopics: createNewsTopics{insertedID: []int{1, 2}},
-			}, nil),
+			url:            "/news-tag",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				createNewsTags: createNewsTags{insertedID: []int{1, 2}},
+			}),
 		},
 	}
 
@@ -69,7 +69,7 @@ func Test_HandleCreateNewsTopic(t *testing.T) {
 			req, _ := http.NewRequest("POST", tc.url, bytes.NewBuffer([]byte(tc.body)))
 
 			router := gin.Default()
-			router.POST("/news-topic", tc.handler.HandleCreateNewsTopic)
+			router.POST("/news-tag", tc.handler.HandleCreateNewsTag)
 			router.ServeHTTP(w, req)
 
 			var jsonMustResponse []byte
@@ -84,7 +84,7 @@ func Test_HandleCreateNewsTopic(t *testing.T) {
 			if tc.mustReturnCode != w.Code || !reflect.DeepEqual(jsonMustResponse, w.Body.Bytes()) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
-					FunctionName: "Test_HandleCreateNewsTopic",
+					FunctionName: "Test_HandleCreateNewsTag",
 					Description:  "Testcase run Test_HandleCreateSingleNews",
 					Trace:        fmt.Sprintf("got %s, expected %v", w.Body.String(), string(jsonMustResponse)),
 				}.Error())
@@ -93,7 +93,7 @@ func Test_HandleCreateNewsTopic(t *testing.T) {
 	}
 }
 
-func Test_HandleGetNewsTopic(t *testing.T) {
+func Test_HandleGetNewsTag(t *testing.T) {
 	defaultPagination, err := urlutils.EncodeStruct(presentation.Pagination{
 		Offset: 0,
 		Count:  1,
@@ -102,9 +102,9 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 		t.Fatal("Failed Generate Pagination Encoded String")
 	}
 
-	defaultFilter, err := urlutils.EncodeStruct(presentation.NewsTopicFilter{
-		Name:        "ABC",
-		NewsTopicID: 1,
+	defaultFilter, err := urlutils.EncodeStruct(presentation.NewsTagsFilter{
+		Name:      "ABC",
+		NewsTagID: 1,
 	})
 
 	if err != nil {
@@ -127,10 +127,10 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusInternalServerError,
-			url:            fmt.Sprintf("/news-topic?pagination=%sawdad", defaultPagination),
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				getNewsTopics: getNewsTopics{err: fmt.Errorf("invalid pagination")},
-			}, nil),
+			url:            fmt.Sprintf("/news-tag?pagination=%sawdad", defaultPagination),
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				getNewsTags: getNewsTags{err: fmt.Errorf("invalid pagination")},
+			}),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -141,17 +141,17 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusInternalServerError,
-			url:            "/news-topic",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				getNewsTopics: getNewsTopics{err: fmt.Errorf("other error")},
-			}, nil),
+			url:            "/news-tag",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				getNewsTags: getNewsTags{err: fmt.Errorf("other error")},
+			}),
 		},
 		{
 			name: "Success #1",
 			mustReturn: response.SuccessResponse{
 				Success: true,
 				Message: "Success Getting News",
-				Data: []presentation.GetNewsTopicsResponse{
+				Data: []presentation.GetNewsTagsResponse{
 					{
 						ID:   1,
 						Name: "A",
@@ -163,10 +163,10 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 				},
 			},
 			mustReturnCode: http.StatusOK,
-			url:            fmt.Sprintf("/news-topic?pagination=%s", defaultPagination),
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				getNewsTopics: getNewsTopics{
-					res: []presentation.GetNewsTopicsResponse{
+			url:            fmt.Sprintf("/news-tag?pagination=%s", defaultPagination),
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				getNewsTags: getNewsTags{
+					res: []presentation.GetNewsTagsResponse{
 						{
 							ID:   1,
 							Name: "A",
@@ -177,14 +177,14 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 						},
 					},
 				},
-			}, nil),
+			}),
 		},
 		{
 			name: "Success #2 - With Filter",
 			mustReturn: response.SuccessResponse{
 				Success: true,
 				Message: "Success Getting News",
-				Data: []presentation.GetNewsTopicsResponse{
+				Data: []presentation.GetNewsTagsResponse{
 					{
 						ID:   1,
 						Name: "A",
@@ -196,10 +196,10 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 				},
 			},
 			mustReturnCode: http.StatusOK,
-			url:            fmt.Sprintf("/news-topic?pagination=%s&filter=%s", defaultPagination, defaultFilter),
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				getNewsTopics: getNewsTopics{
-					res: []presentation.GetNewsTopicsResponse{
+			url:            fmt.Sprintf("/news-tag?pagination=%s&filter=%s", defaultPagination, defaultFilter),
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				getNewsTags: getNewsTags{
+					res: []presentation.GetNewsTagsResponse{
 						{
 							ID:   1,
 							Name: "A",
@@ -210,7 +210,7 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 						},
 					},
 				},
-			}, nil),
+			}),
 		},
 	}
 
@@ -220,7 +220,7 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 			req, _ := http.NewRequest("GET", tc.url, nil)
 
 			router := gin.Default()
-			router.GET("/news-topic", tc.handler.HandleGetNewsTopic)
+			router.GET("/news-tag", tc.handler.HandleGetNewsTag)
 			router.ServeHTTP(w, req)
 
 			var jsonMustResponse []byte
@@ -244,7 +244,7 @@ func Test_HandleGetNewsTopic(t *testing.T) {
 	}
 }
 
-func Test_HandleUpdateNewsTopic(t *testing.T) {
+func Test_HandleUpdateNewsTag(t *testing.T) {
 	testcases := []struct {
 		name           string
 		url            string
@@ -263,39 +263,39 @@ func Test_HandleUpdateNewsTopic(t *testing.T) {
 			},
 			mustReturnCode: http.StatusBadRequest,
 			body:           "",
-			url:            "/news-topic",
-			handler:        NewHTTP(nil, nil, &MockNewsTopicDataUC{}, nil),
+			url:            "/news-tag",
+			handler:        NewHTTP(nil, nil, nil, &MockNewsTagDataUC{}),
 		},
 		{
 			name: "Failed - Usecase Return Error",
 			mustReturn: response.ErrorResponse{
 				Success: false,
-				Message: "Failed Update News Topics",
+				Message: "Failed Update News Tags",
 				Type:    0,
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusInternalServerError,
 			body:           `[{"id" : 1, "name" : "A"}, {"id" : 2, "name" : "B"}]`,
-			url:            "/news-topic",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				updateNewsTopics: updateNewsTopics{err: fmt.Errorf("a")},
-			}, nil),
+			url:            "/news-tag",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				updateNewsTags: updateNewsTags{err: fmt.Errorf("a")},
+			}),
 		},
 		{
 			name: "Success",
 			mustReturn: response.SuccessResponse{
 				Success: true,
-				Message: "Success Updated News Topics",
+				Message: "Success Updated News Tags",
 				Data: gin.H{
 					"updated_id": []int{1, 2},
 				},
 			},
 			mustReturnCode: http.StatusOK,
 			body:           `[{"id" : 1, "name" : "A"}, {"id" : 2, "name" : "B"}]`,
-			url:            "/news-topic",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				updateNewsTopics: updateNewsTopics{updatedID: []int{1, 2}},
-			}, nil),
+			url:            "/news-tag",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				updateNewsTags: updateNewsTags{updatedID: []int{1, 2}},
+			}),
 		},
 	}
 
@@ -305,7 +305,7 @@ func Test_HandleUpdateNewsTopic(t *testing.T) {
 			req, _ := http.NewRequest("PUT", tc.url, bytes.NewBuffer([]byte(tc.body)))
 
 			router := gin.Default()
-			router.PUT("/news-topic", tc.handler.HandleUpdateNewsTopic)
+			router.PUT("/news-tag", tc.handler.HandleUpdateNewsTag)
 			router.ServeHTTP(w, req)
 
 			var jsonMustResponse []byte
@@ -320,7 +320,7 @@ func Test_HandleUpdateNewsTopic(t *testing.T) {
 			if tc.mustReturnCode != w.Code || !reflect.DeepEqual(jsonMustResponse, w.Body.Bytes()) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
-					FunctionName: "Test_HandleUpdateNewsTopic",
+					FunctionName: "Test_HandleUpdateNewsTag",
 					Description:  "Testcase run Test_HandleCreateSingleNews",
 					Trace:        fmt.Sprintf("got %s, expected %v", w.Body.String(), string(jsonMustResponse)),
 				}.Error())
@@ -329,7 +329,7 @@ func Test_HandleUpdateNewsTopic(t *testing.T) {
 	}
 }
 
-func Test_HandleDeleteNewsTopic(t *testing.T) {
+func Test_HandleDeleteNewsTag(t *testing.T) {
 	testcases := []struct {
 		name           string
 		url            string
@@ -346,37 +346,37 @@ func Test_HandleDeleteNewsTopic(t *testing.T) {
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusBadRequest,
-			url:            "/news-topic",
-			handler:        NewHTTP(nil, nil, &MockNewsTopicDataUC{}, nil),
+			url:            "/news-tag",
+			handler:        NewHTTP(nil, nil, nil, &MockNewsTagDataUC{}),
 		},
 		{
 			name: "Failed - Usecase Return Error",
 			mustReturn: response.ErrorResponse{
 				Success: false,
-				Message: "Failed Run Delete News Topic",
+				Message: "Failed Run Delete News Tag",
 				Type:    0,
 				Data:    nil,
 			},
 			mustReturnCode: http.StatusBadRequest,
-			url:            "/news-topic?id=1&id=2",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				deleteNewsTopics: deleteNewsTopics{err: fmt.Errorf("a")},
-			}, nil),
+			url:            "/news-tag?id=1&id=2",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				deleteNewsTags: deleteNewsTags{err: fmt.Errorf("a")},
+			}),
 		},
 		{
 			name: "Success",
 			mustReturn: response.SuccessResponse{
 				Success: true,
-				Message: "Success Delete News Topics",
+				Message: "Success Delete News Tags",
 				Data: gin.H{
 					"deleted_id": []int{1, 2},
 				},
 			},
 			mustReturnCode: http.StatusOK,
-			url:            "/news-topic?id=1&id=2",
-			handler: NewHTTP(nil, nil, &MockNewsTopicDataUC{
-				deleteNewsTopics: deleteNewsTopics{deletedID: []int{1, 2}},
-			}, nil),
+			url:            "/news-tag?id=1&id=2",
+			handler: NewHTTP(nil, nil, nil, &MockNewsTagDataUC{
+				deleteNewsTags: deleteNewsTags{deletedID: []int{1, 2}},
+			}),
 		},
 	}
 
@@ -386,7 +386,7 @@ func Test_HandleDeleteNewsTopic(t *testing.T) {
 			req, _ := http.NewRequest("DELETE", tc.url, nil)
 
 			router := gin.Default()
-			router.DELETE("/news-topic", tc.handler.HandleDeleteNewsTopic)
+			router.DELETE("/news-tag", tc.handler.HandleDeleteNewsTag)
 			router.ServeHTTP(w, req)
 
 			var jsonMustResponse []byte
@@ -401,7 +401,7 @@ func Test_HandleDeleteNewsTopic(t *testing.T) {
 			if tc.mustReturnCode != w.Code || !reflect.DeepEqual(jsonMustResponse, w.Body.Bytes()) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
-					FunctionName: "Test_HandleCreateNewsTopic",
+					FunctionName: "Test_HandleCreateNewsTag",
 					Description:  "Testcase run Test_HandleCreateSingleNews",
 					Trace:        fmt.Sprintf("got %s, expected %v", w.Body.String(), string(jsonMustResponse)),
 				}.Error())

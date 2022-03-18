@@ -13,8 +13,8 @@ type NewsTopicFilter struct {
 }
 
 type NewsTagsFilter struct {
-	Name        string `json:"name"`
-	NewsTopicID int    `json:"news_topic_id"`
+	Name      string `json:"name"`
+	NewsTagID int    `json:"news_tag_id"`
 }
 
 type Pagination struct {

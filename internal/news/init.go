@@ -15,9 +15,10 @@ func StartHTTP(router *gin.Engine, postgre *postgre.Postgre) *Domain {
 	uc := usecase.New(&usecase.Repositories{
 		NewsDataRepository:      postgre,
 		NewsTopicDataRepository: postgre,
+		NewsTagDataRepository:   postgre,
 	})
 
-	httpHandler := rest.NewHTTP(router, uc, uc)
+	httpHandler := rest.NewHTTP(router, uc, uc, uc)
 	httpHandler.SetRoutes()
 
 	return &Domain{
