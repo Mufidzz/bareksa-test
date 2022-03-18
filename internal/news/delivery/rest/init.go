@@ -5,6 +5,7 @@ import "github.com/gin-gonic/gin"
 type Usecases struct {
 	NewsDataUC
 	NewsTopicDataUC
+	NewsTagDataUC
 }
 
 type HTTPHandler struct {
@@ -16,12 +17,14 @@ func NewHTTP(
 	router *gin.Engine,
 	newsDataUC NewsDataUC,
 	newsTopicDataUC NewsTopicDataUC,
+	newsTagDataUC NewsTagDataUC,
 ) *HTTPHandler {
 	return &HTTPHandler{
 		router: router,
 		usecases: Usecases{
 			NewsDataUC:      newsDataUC,
 			NewsTopicDataUC: newsTopicDataUC,
+			NewsTagDataUC:   newsTagDataUC,
 		},
 	}
 }
@@ -43,5 +46,13 @@ func (handler *HTTPHandler) SetRoutes() {
 		newsTopic.PUT("/", handler.HandleUpdateNewsTopic)
 		newsTopic.POST("/", handler.HandleCreateNewsTopic)
 		newsTopic.DELETE("/", handler.HandleDeleteNewsTopic)
+	}
+
+	newsTag := router.Group("/news-tag")
+	{
+		newsTag.GET("/", handler.HandleGetNewsTag)
+		newsTag.PUT("/", handler.HandleUpdateNewsTag)
+		newsTag.POST("/", handler.HandleCreateNewsTag)
+		newsTag.DELETE("/", handler.HandleDeleteNewsTag)
 	}
 }

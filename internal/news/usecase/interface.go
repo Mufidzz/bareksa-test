@@ -17,7 +17,7 @@ type NewsTopicDataRepository interface {
 }
 
 type NewsTagDataRepository interface {
-	CreateBulkNewsTags(in []presentation.CreateBulkTagsRequest) (insertedID []int, err error)
+	CreateBulkNewsTags(in []presentation.CreateNewsTagsRequest) (insertedID []int, err error)
 	GetBulkNewsTags(pagination *presentation.Pagination, filter *presentation.NewsTagsFilter) (res []presentation.GetNewsTagsResponse, err error)
 	UpdateBulkNewsTags(in []presentation.UpdateNewsTagsRequest) (updatedID []int, err error)
 	DeleteBulkNewsTags(newsTopicID []int) (deletedID []int, err error)

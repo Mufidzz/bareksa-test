@@ -18,7 +18,7 @@ func Test_CreateBulkNewsTags(t *testing.T) {
 
 	testcase := []struct {
 		name       string
-		in         []presentation.CreateBulkTagsRequest
+		in         []presentation.CreateNewsTagsRequest
 		mockExp    func(mm sqlmock.Sqlmock)
 		mustReturn []int
 		mustErr    bool
@@ -29,7 +29,7 @@ func Test_CreateBulkNewsTags(t *testing.T) {
 				mm.ExpectQuery("INSERT INTO news_tags (.+) VALUES (.+) RETURNING id").
 					WillReturnError(fmt.Errorf("hello"))
 			},
-			in: []presentation.CreateBulkTagsRequest{
+			in: []presentation.CreateNewsTagsRequest{
 				{"A"},
 				{"B"},
 				{"C"},
@@ -47,7 +47,7 @@ func Test_CreateBulkNewsTags(t *testing.T) {
 				mm.ExpectQuery("INSERT INTO news_tags (.+) VALUES (.+) RETURNING id").
 					WillReturnRows(rows)
 			},
-			in: []presentation.CreateBulkTagsRequest{
+			in: []presentation.CreateNewsTagsRequest{
 				{"A"},
 				{"B"},
 			},
@@ -147,8 +147,8 @@ func Test_GetBulkNewsTags(t *testing.T) {
 					WillReturnRows(rows)
 			},
 			filter: &presentation.NewsTagsFilter{
-				Name:        "ASDASD",
-				NewsTopicID: 1,
+				Name:      "ASDASD",
+				NewsTagID: 1,
 			},
 			pagination: nil,
 			mustReturn: []presentation.GetNewsTagsResponse{
@@ -184,7 +184,7 @@ func Test_GetBulkNewsTags(t *testing.T) {
 					WillReturnRows(rows)
 			},
 			filter: &presentation.NewsTagsFilter{
-				NewsTopicID: 1,
+				NewsTagID: 1,
 			},
 			pagination: nil,
 			mustReturn: []presentation.GetNewsTagsResponse{

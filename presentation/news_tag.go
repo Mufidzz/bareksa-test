@@ -1,6 +1,6 @@
 package presentation
 
-type CreateBulkTagsRequest struct {
+type CreateNewsTagsRequest struct {
 	Name string `db:"name"`
 }
 

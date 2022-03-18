@@ -29,7 +29,7 @@ type deleteBulkNewsTags struct {
 	err       error
 }
 
-func (mntdr *MockNewsTagDataRepository) CreateBulkNewsTags(in []presentation.CreateBulkTagsRequest) (insertedID []int, err error) {
+func (mntdr *MockNewsTagDataRepository) CreateBulkNewsTags(in []presentation.CreateNewsTagsRequest) (insertedID []int, err error) {
 	return mntdr.createBulkNewsTags.insertedID, mntdr.createBulkNewsTags.err
 }
 func (mntdr *MockNewsTagDataRepository) GetBulkNewsTags(pagination *presentation.Pagination, filter *presentation.NewsTagsFilter) (res []presentation.GetNewsTagsResponse, err error) {

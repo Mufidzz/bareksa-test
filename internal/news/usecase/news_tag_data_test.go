@@ -10,7 +10,7 @@ import (
 
 func Test_CreateTags(t *testing.T) {
 	type inputParam struct {
-		in []presentation.CreateBulkTagsRequest
+		in []presentation.CreateNewsTagsRequest
 	}
 
 	testcases := []struct {
@@ -30,7 +30,7 @@ func Test_CreateTags(t *testing.T) {
 				},
 			},
 			in: inputParam{
-				in: []presentation.CreateBulkTagsRequest{
+				in: []presentation.CreateNewsTagsRequest{
 					{
 						Name: "AAA",
 					},
@@ -52,7 +52,7 @@ func Test_CreateTags(t *testing.T) {
 				},
 			},
 			in: inputParam{
-				in: []presentation.CreateBulkTagsRequest{
+				in: []presentation.CreateNewsTagsRequest{
 					{
 						Name: "AAA",
 					},
