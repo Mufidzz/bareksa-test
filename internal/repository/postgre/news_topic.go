@@ -8,7 +8,7 @@ import (
 	"github.com/lib/pq"
 )
 
-func (db *Postgre) CreateBulkNewsTopics(in []presentation.CreateBulkTopicsRequest) (insertedID []int, err error) {
+func (db *Postgre) CreateBulkNewsTopics(in []presentation.CreateNewsTopicsRequest) (insertedID []int, err error) {
 	q := `INSERT INTO news_topics (name) VALUES`
 
 	queryParamLen := 1

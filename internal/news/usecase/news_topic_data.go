@@ -6,7 +6,7 @@ import (
 	"github.com/Mufidzz/bareksa-test/presentation"
 )
 
-func (uc *Usecase) CreateNewsTopics(in []presentation.CreateBulkTopicsRequest) (insertedID []int, err error) {
+func (uc *Usecase) CreateNewsTopics(in []presentation.CreateNewsTopicsRequest) (insertedID []int, err error) {
 	return uc.repositories.CreateBulkNewsTopics(in)
 }
 func (uc *Usecase) DeleteNewsTopics(newsTopicID []int) (deletedID []int, err error) {

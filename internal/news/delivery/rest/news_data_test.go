@@ -22,6 +22,9 @@ func Test_HandleGetNews(t *testing.T) {
 		Offset: 0,
 		Count:  1,
 	})
+	if err != nil {
+		t.Fatal("Failed Generate Pagination Encoded String")
+	}
 
 	defaultFilter, err := urlutils.EncodeStruct(presentation.NewsFilter{
 		Status: 1,
@@ -30,7 +33,7 @@ func Test_HandleGetNews(t *testing.T) {
 	})
 
 	if err != nil {
-		t.Fatal("Failed Generate Pagination Encoded String")
+		t.Fatal("Failed Generate Filter Encoded String")
 	}
 
 	testcases := []struct {
@@ -50,7 +53,7 @@ func Test_HandleGetNews(t *testing.T) {
 			},
 			mustReturnCode: http.StatusBadRequest,
 			url:            "/news",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Invalid Pagination",
@@ -64,7 +67,7 @@ func Test_HandleGetNews(t *testing.T) {
 			url:            fmt.Sprintf("/news?pagination=%sawdad", defaultPagination),
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				getNews: getNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -78,7 +81,7 @@ func Test_HandleGetNews(t *testing.T) {
 			url:            fmt.Sprintf("/news?pagination=%s", defaultPagination),
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				getNews: getNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name: "Success #1",
@@ -116,7 +119,7 @@ func Test_HandleGetNews(t *testing.T) {
 					},
 					err: nil,
 				},
-			}),
+			}, nil),
 		},
 		{
 			name: "Success #2 - With Filter",
@@ -154,7 +157,7 @@ func Test_HandleGetNews(t *testing.T) {
 					},
 					err: nil,
 				},
-			}),
+			}, nil),
 		},
 	}
 
@@ -208,7 +211,7 @@ func Test_HandleGetSingleNews(t *testing.T) {
 			},
 			mustReturnCode: http.StatusBadRequest,
 			url:            "/news/alkdjhaqwd",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -222,7 +225,7 @@ func Test_HandleGetSingleNews(t *testing.T) {
 			url:            "/news/1",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				getSingleNews: getSingleNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name: "Success",
@@ -256,7 +259,7 @@ func Test_HandleGetSingleNews(t *testing.T) {
 					},
 					err: nil,
 				},
-			}),
+			}, nil),
 		},
 	}
 
@@ -310,7 +313,7 @@ func Test_HandleCreateSingleNews(t *testing.T) {
 			mustReturnCode: http.StatusBadRequest,
 			body:           "",
 			url:            "/news",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -325,7 +328,7 @@ func Test_HandleCreateSingleNews(t *testing.T) {
 			url:            "/news",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				createSingleNews: createSingleNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name:           "Success",
@@ -335,7 +338,7 @@ func Test_HandleCreateSingleNews(t *testing.T) {
 			url:            "/news",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				createSingleNews: createSingleNews{err: nil},
-			}),
+			}, nil),
 		},
 	}
 
@@ -389,7 +392,7 @@ func Test_HandleUpdateSingleNews(t *testing.T) {
 			mustReturnCode: http.StatusBadRequest,
 			body:           "",
 			url:            "/news/alkdjhaqwd",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Invalid JSON",
@@ -402,7 +405,7 @@ func Test_HandleUpdateSingleNews(t *testing.T) {
 			mustReturnCode: http.StatusBadRequest,
 			body:           "",
 			url:            "/news/1",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -417,7 +420,7 @@ func Test_HandleUpdateSingleNews(t *testing.T) {
 			url:            "/news/1",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				updateSingleNews: updateSingleNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name:           "Success",
@@ -427,7 +430,7 @@ func Test_HandleUpdateSingleNews(t *testing.T) {
 			url:            "/news/1",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				updateSingleNews: updateSingleNews{err: nil},
-			}),
+			}, nil),
 		},
 	}
 
@@ -479,7 +482,7 @@ func Test_HandleDeleteSingleNews(t *testing.T) {
 			},
 			mustReturnCode: http.StatusBadRequest,
 			url:            "/news/alkdjhaqwd",
-			handler:        NewHTTP(nil, &MockNewsDataUC{}),
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil),
 		},
 		{
 			name: "Failed - Usecase Return Error",
@@ -493,7 +496,7 @@ func Test_HandleDeleteSingleNews(t *testing.T) {
 			url:            "/news/1",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				deleteSingleNews: deleteSingleNews{err: fmt.Errorf("Adwde")},
-			}),
+			}, nil),
 		},
 		{
 			name:           "Success",
@@ -502,7 +505,7 @@ func Test_HandleDeleteSingleNews(t *testing.T) {
 			url:            "/news/1",
 			handler: NewHTTP(nil, &MockNewsDataUC{
 				createSingleNews: createSingleNews{err: nil},
-			}),
+			}, nil),
 		},
 	}
 

@@ -25,7 +25,7 @@ func Test_CreateBulkTopics(t *testing.T) {
 
 	// Failed - SQL Return Error
 	t.Run("Failed - SQL Return Error", func(tt *testing.T) {
-		in := []presentation.CreateBulkTopicsRequest{
+		in := []presentation.CreateNewsTopicsRequest{
 			{
 				"AAA",
 			},
@@ -48,7 +48,7 @@ func Test_CreateBulkTopics(t *testing.T) {
 
 	// Success #1 - Success Create New Rows
 	t.Run("Success #1 - Success Create New Rows", func(tt *testing.T) {
-		in := []presentation.CreateBulkTopicsRequest{
+		in := []presentation.CreateNewsTopicsRequest{
 			{
 				"AAA",
 			},
