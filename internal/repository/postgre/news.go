@@ -56,10 +56,10 @@ func (db *Postgre) CreateBulkNews(in []presentation.CreateNewsRequest) (inserted
 }
 
 func (db *Postgre) GetBulkNews(pagination presentation.Pagination, filter *presentation.NewsFilter) (res []presentation.GetNewsResponse, err error) {
-	q := `SELECT news.id, news.created_at, news.updated_at, news.title, news.content, string_agg(DISTINCT topics.name, ', ') as topics_name, string_agg(DISTINCT tags.name, ', ') as tags_name, news.status FROM news
-			INNER JOIN assoc_news_topics aTopics on news.id = aTopics.news_id
+	q := `SELECT news.id, news.created_at, news.updated_at, news.title, news.content, coalesce(string_agg(DISTINCT topics.name, ', '), '') as topics_name, coalesce(string_agg(DISTINCT tags.name, ', '),'') as tags_name, news.status FROM news
+			LEFT JOIN assoc_news_topics aTopics on news.id = aTopics.news_id
             LEFT JOIN news_topics topics on aTopics.news_topic_id = topics.id
-            INNER JOIN assoc_news_tags aTags on news.id = aTags.news_id
+            LEFT JOIN assoc_news_tags aTags on news.id = aTags.news_id
             LEFT JOIN news_tags tags on aTags.news_tag_id = tags.id`
 
 	paramCount := 0
