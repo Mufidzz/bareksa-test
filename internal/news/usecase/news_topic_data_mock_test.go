@@ -29,7 +29,7 @@ type deleteBulkNewsTopics struct {
 	err       error
 }
 
-func (mntdr *MockNewsTopicDataRepository) CreateBulkNewsTopics(in []presentation.CreateBulkTopicsRequest) (insertedID []int, err error) {
+func (mntdr *MockNewsTopicDataRepository) CreateBulkNewsTopics(in []presentation.CreateNewsTopicsRequest) (insertedID []int, err error) {
 	return mntdr.createBulkNewsTopics.insertedID, mntdr.createBulkNewsTopics.err
 }
 func (mntdr *MockNewsTopicDataRepository) GetBulkNewsTopics(pagination *presentation.Pagination, filter *presentation.NewsTopicFilter) (res []presentation.GetNewsTopicsResponse, err error) {

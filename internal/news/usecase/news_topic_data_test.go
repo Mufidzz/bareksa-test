@@ -10,7 +10,7 @@ import (
 
 func Test_CreateTopics(t *testing.T) {
 	type inputParam struct {
-		in []presentation.CreateBulkTopicsRequest
+		in []presentation.CreateNewsTopicsRequest
 	}
 
 	testcases := []struct {
@@ -30,7 +30,7 @@ func Test_CreateTopics(t *testing.T) {
 				},
 			},
 			in: inputParam{
-				in: []presentation.CreateBulkTopicsRequest{
+				in: []presentation.CreateNewsTopicsRequest{
 					{
 						Name: "AAA",
 					},
@@ -52,7 +52,7 @@ func Test_CreateTopics(t *testing.T) {
 				},
 			},
 			in: inputParam{
-				in: []presentation.CreateBulkTopicsRequest{
+				in: []presentation.CreateNewsTopicsRequest{
 					{
 						Name: "AAA",
 					},
