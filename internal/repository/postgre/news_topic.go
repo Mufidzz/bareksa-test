@@ -71,8 +71,8 @@ func (db *Postgre) GetBulkNewsTopics(pagination *presentation.Pagination, filter
 
 		if filter.Name != "" {
 			paramCount += 1
-			q = dbutils.AddCustomFilter(q, dbutils.CONNECTOR_AND, "name", dbutils.COMPARATOR_LIKE, fmt.Sprintf("%%$%d%%", paramCount))
-			paramArgs = append(paramArgs, filter.Name)
+			q = dbutils.AddFilter(q, dbutils.CONNECTOR_AND, "name", dbutils.COMPARATOR_LIKE, paramCount)
+			paramArgs = append(paramArgs, fmt.Sprintf("%%%s%%", filter.Name))
 		}
 	}
 

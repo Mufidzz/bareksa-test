@@ -134,11 +134,11 @@ func Test_GetBulkNewsTopics(t *testing.T) {
 			AddRow(1, "ABCDE")
 
 		mock.ExpectQuery("SELECT (.+) FROM news_topics (.+)").
-			WithArgs("ABCDE", defaultPagination.Count, defaultPagination.Offset).
+			WithArgs("%X%", defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
 		_, err = pgDB.GetBulkNewsTopics(&defaultPagination, &presentation.NewsTopicFilter{
-			Name: "ABCDE",
+			Name: "X",
 		})
 
 		if err != nil {
@@ -182,7 +182,7 @@ func Test_GetBulkNewsTopics(t *testing.T) {
 			AddRow(1, "ABCDE")
 
 		mock.ExpectQuery("SELECT (.+) FROM news_topics (.+)").
-			WithArgs(1, "ABCDE", defaultPagination.Count, defaultPagination.Offset).
+			WithArgs(1, "%ABCDE%", defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
 		_, err = pgDB.GetBulkNewsTopics(&defaultPagination, &presentation.NewsTopicFilter{
@@ -207,7 +207,7 @@ func Test_GetBulkNewsTopics(t *testing.T) {
 			AddRow(1, "ABCDE")
 
 		mock.ExpectQuery("SELECT (.+) FROM news_topics (.+)").
-			WithArgs(1, "ABCDE").
+			WithArgs(1, "%ABCDE%").
 			WillReturnRows(rows)
 
 		_, err = pgDB.GetBulkNewsTopics(nil, &presentation.NewsTopicFilter{
@@ -232,7 +232,7 @@ func Test_GetBulkNewsTopics(t *testing.T) {
 			AddRow(1, "ABCDE")
 
 		mock.ExpectQuery("SELECT (.+) FROM news_topics (.+)").
-			WithArgs(1, "ABCDE").
+			WithArgs(1, "%ABCDE%").
 			WillReturnRows(rows)
 
 		_, err = pgDB.GetBulkNewsTopics(nil, &presentation.NewsTopicFilter{
