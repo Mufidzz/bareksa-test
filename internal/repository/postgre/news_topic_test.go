@@ -1,10 +1,10 @@
 package postgre
 
 import (
-	"Test_Bareksa/pkg/response"
-	"Test_Bareksa/presentation"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/Mufidzz/bareksa-test/pkg/response"
+	"github.com/Mufidzz/bareksa-test/presentation"
 	"github.com/jmoiron/sqlx"
 	"reflect"
 	"testing"

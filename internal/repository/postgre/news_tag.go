@@ -1,10 +1,10 @@
 package postgre
 
 import (
-	"Test_Bareksa/pkg/dbutils"
-	"Test_Bareksa/pkg/response"
-	"Test_Bareksa/presentation"
 	"fmt"
+	"github.com/Mufidzz/bareksa-test/pkg/dbutils"
+	"github.com/Mufidzz/bareksa-test/pkg/response"
+	"github.com/Mufidzz/bareksa-test/presentation"
 	"github.com/lib/pq"
 )
 

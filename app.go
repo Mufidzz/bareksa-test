@@ -1,9 +1,10 @@
 package main
 
 import (
-	"Test_Bareksa/internal/repository/postgre"
-	"Test_Bareksa/presentation"
-	"fmt"
+	"github.com/Mufidzz/bareksa-test/internal/news"
+	"github.com/Mufidzz/bareksa-test/internal/repository/postgre"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
 	"log"
 )
 
@@ -13,7 +14,20 @@ func main() {
 		log.Printf("[DB Init] error initialize database, trace %v", err)
 	}
 
-	res, err := postgreRepo.GetBulkNewsTopics(nil, &presentation.NewsTopicFilter{Name: "ASDADW"})
+	StartREST(postgreRepo)
+}
 
-	fmt.Println(res, err)
+func StartREST(pg *postgre.Postgre) {
+	router := gin.Default()
+	router.Use(cors.New(cors.Config{
+		AllowMethods:     []string{"PUT", "POST", "GET", "DELETE"},
+		AllowHeaders:     []string{"Origin"},
+		ExposeHeaders:    []string{"Content-Length"},
+		AllowCredentials: true,
+		AllowAllOrigins:  true,
+	}))
+
+	news.StartHTTP(router, pg)
+
+	router.Run(":4456")
 }

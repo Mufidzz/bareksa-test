@@ -1,10 +1,10 @@
 package postgre
 
 import (
-	"Test_Bareksa/pkg/response"
-	"Test_Bareksa/presentation"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/Mufidzz/bareksa-test/pkg/response"
+	"github.com/Mufidzz/bareksa-test/presentation"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"reflect"
@@ -27,7 +27,7 @@ func Test_CreateNews(t *testing.T) {
 
 	// Failed - SQL Return Error
 	t.Run("Failed - SQL Return Error", func(tt *testing.T) {
-		in := []presentation.CreateBulkNewsRequest{
+		in := []presentation.CreateNewsRequest{
 			{
 				Title:   "A",
 				Content: "B",
@@ -52,7 +52,7 @@ func Test_CreateNews(t *testing.T) {
 
 	// Success #1 - Success Create New Rows
 	t.Run("Success #1 - Success Create New Rows", func(tt *testing.T) {
-		in := []presentation.CreateBulkNewsRequest{
+		in := []presentation.CreateNewsRequest{
 			{
 				Title:   "A",
 				Content: "B",
@@ -100,7 +100,7 @@ func Test_GetNews(t *testing.T) {
 
 	// Failed - SQL Return Error
 	t.Run("Failed - SQL Return Error", func(tt *testing.T) {
-		mock.ExpectQuery("SELECT (.+) FROM news INNER JOIN (.+) LEFT JOIN (.+) INNER JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
 			WillReturnError(fmt.Errorf("hello"))
 
 		_, err = pgDB.GetBulkNews(defaultPagination, &presentation.NewsFilter{
@@ -123,7 +123,7 @@ func Test_GetNews(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "title", "content", "topics_name", "tags_name", "status"}).
 			AddRow(1, now, now, "abc", "xyz", "asd", "asd", 1)
 
-		mock.ExpectQuery("SELECT (.+) FROM news INNER JOIN (.+) LEFT JOIN (.+) INNER JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
 			WithArgs(defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
@@ -144,7 +144,7 @@ func Test_GetNews(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "title", "content", "topics_name", "tags_name", "status"}).
 			AddRow(1, now, now, "abc", "xyz", "asd", "asd", 1)
 
-		mock.ExpectQuery("SELECT (.+) FROM news INNER JOIN (.+) LEFT JOIN (.+) INNER JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
 			WithArgs(1, defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
@@ -165,7 +165,7 @@ func Test_GetNews(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "title", "content", "topics_name", "tags_name", "status"}).
 			AddRow(1, now, now, "abc", "xyz", "asd", "asd", 1)
 
-		mock.ExpectQuery("SELECT (.+) FROM news INNER JOIN (.+) LEFT JOIN (.+) INNER JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
 			WithArgs(pq.Array([]int{1}), defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
@@ -186,7 +186,7 @@ func Test_GetNews(t *testing.T) {
 		rows := sqlmock.NewRows([]string{"id", "created_at", "updated_at", "title", "content", "topics_name", "tags_name", "status"}).
 			AddRow(1, now, now, "abc", "xyz", "asd", "asd", 1)
 
-		mock.ExpectQuery("SELECT (.+) FROM news INNER JOIN (.+) LEFT JOIN (.+) INNER JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
+		mock.ExpectQuery("SELECT (.+) FROM news LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) LEFT JOIN (.+) GROUP BY (.+) LIMIT (.+) OFFSET (.+)").
 			WithArgs(1, pq.Array([]int{2}), defaultPagination.Count, defaultPagination.Offset).
 			WillReturnRows(rows)
 
