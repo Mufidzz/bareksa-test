@@ -3,6 +3,7 @@ package usecase
 type Repositories struct {
 	NewsDataRepository
 	NewsTopicDataRepository
+	NewsTagDataRepository
 }
 
 type Usecase struct {
