@@ -20,7 +20,7 @@ type GetNewsResponse struct {
 	Status     int       `db:"status"`
 }
 
-type CreateBulkNewsRequest struct {
+type CreateNewsRequest struct {
 	Title   string `db:"title"`
 	Content string `db:"content"`
 	Status  int    `db:"status"`

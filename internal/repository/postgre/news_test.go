@@ -1,10 +1,10 @@
 package postgre
 
 import (
-	"Test_Bareksa/pkg/response"
-	"Test_Bareksa/presentation"
 	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/Mufidzz/bareksa-test/pkg/response"
+	"github.com/Mufidzz/bareksa-test/presentation"
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
 	"reflect"
@@ -27,7 +27,7 @@ func Test_CreateNews(t *testing.T) {
 
 	// Failed - SQL Return Error
 	t.Run("Failed - SQL Return Error", func(tt *testing.T) {
-		in := []presentation.CreateBulkNewsRequest{
+		in := []presentation.CreateNewsRequest{
 			{
 				Title:   "A",
 				Content: "B",
@@ -52,7 +52,7 @@ func Test_CreateNews(t *testing.T) {
 
 	// Success #1 - Success Create New Rows
 	t.Run("Success #1 - Success Create New Rows", func(tt *testing.T) {
-		in := []presentation.CreateBulkNewsRequest{
+		in := []presentation.CreateNewsRequest{
 			{
 				Title:   "A",
 				Content: "B",
