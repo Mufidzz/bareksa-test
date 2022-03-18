@@ -10,4 +10,8 @@ type NewsDataRepository interface {
 }
 
 type NewsTopicDataRepository interface {
+	CreateBulkNewsTopics(in []presentation.CreateBulkTopicsRequest) (insertedID []int, err error)
+	GetBulkNewsTopics(pagination *presentation.Pagination, filter *presentation.NewsTopicFilter) (res []presentation.GetNewsTopicsResponse, err error)
+	UpdateBulkNewsTopics(in []presentation.UpdateNewsTopicsRequest) (updatedID []int, err error)
+	DeleteBulkNewsTopics(newsTopicID []int) (deletedID []int, err error)
 }
