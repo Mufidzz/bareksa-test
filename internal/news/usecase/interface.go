@@ -8,3 +8,6 @@ type NewsDataRepository interface {
 	UpdateBulkNews(in []presentation.UpdateNewsRequest) (updatedID []int, err error)
 	DeleteBulkNews(newsID []int) (deletedID []int, err error)
 }
+
+type NewsTopicDataRepository interface {
+}
