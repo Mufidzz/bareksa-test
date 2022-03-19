@@ -7,11 +7,10 @@ import (
 	"github.com/go-redis/redismock/v8"
 	"reflect"
 	"testing"
-	"time"
 )
 
 func Test_SaveObject(t *testing.T) {
-	exp := time.Duration(10) * time.Second
+	exp := REDIS_TIMEOUT_NEWS
 
 	testcases := []struct {
 		name    string

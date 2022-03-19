@@ -1,13 +1,16 @@
 package rest
 
-import "github.com/Mufidzz/bareksa-test/presentation"
+import (
+	"github.com/Mufidzz/bareksa-test/presentation"
+	"github.com/gin-gonic/gin"
+)
 
 type NewsDataUC interface {
 	CreateSingleNews(newNews presentation.CreateNewsRequest) error
 	UpdateSingleNews(updatedNews presentation.UpdateNewsRequest) error
 	DeleteSingleNews(newsId int) error
-	GetSingleNews(newsId int) (presentation.GetNewsResponse, error)
-	GetNews(paginationString, filterString string) (res []presentation.GetNewsResponse, err error)
+	GetSingleNews(ctx *gin.Context, newsId int) (presentation.GetNewsResponse, error)
+	GetNews(ctx *gin.Context, paginationString, filterString string) (res []presentation.GetNewsResponse, err error)
 
 	AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc) error
 	AssignNewsWithNewsTag(in presentation.CreateNewsTagsAssoc) error

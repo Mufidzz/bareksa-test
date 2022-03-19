@@ -17,7 +17,7 @@ func main() {
 	}
 
 	redisRepo, err := redisRepository.New(redis.Options{
-		Addr:     "localhost:8888",
+		Addr:     "localhost:6379",
 		Password: "",
 		DB:       0,
 	})
@@ -35,7 +35,7 @@ func StartREST(pg *postgre.Postgre, redisRepo *redisRepository.Redis) {
 		AllowAllOrigins:  true,
 	}))
 
-	news.StartHTTP(router, pg)
+	news.StartHTTP(router, pg, redisRepo)
 
 	router.Run(":4456")
 }

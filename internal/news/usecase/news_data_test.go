@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"github.com/Mufidzz/bareksa-test/pkg/response"
 	"github.com/Mufidzz/bareksa-test/presentation"
+	"github.com/gin-gonic/gin"
+	"log"
+	"net/http"
 	"reflect"
 	"testing"
 	"time"
@@ -43,6 +46,9 @@ func Test_CreateSingleNews(t *testing.T) {
 						err:        nil,
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{flushAll: flushAll{
+					nil,
+				}},
 			},
 			in: inputParam{newNews: presentation.CreateNewsRequest{
 				Title:   "A",
@@ -108,6 +114,7 @@ func Test_UpdateSingleNews(t *testing.T) {
 						err:       nil,
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{flushAll: flushAll{nil}},
 			},
 			in: inputParam{updatedNews: presentation.UpdateNewsRequest{
 				ID:      1,
@@ -169,6 +176,9 @@ func Test_DeleteSingleNews(t *testing.T) {
 						err:       nil,
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{flushAll: flushAll{
+					nil,
+				}},
 			},
 			in:      inputParam{newsID: 124312},
 			mustErr: false,
@@ -215,6 +225,10 @@ func Test_GetSingleNews(t *testing.T) {
 				NewsDataRepository: &MockNewsRepository{
 					getBulkNews: getBulkNews{err: fmt.Errorf("AXDCZ")},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{err: fmt.Errorf("any")},
+					saveObject: saveObject{err: fmt.Errorf("any")},
+				},
 			},
 			in:         inputParam{newsID: 123},
 			mustReturn: presentation.GetNewsResponse{},
@@ -240,6 +254,10 @@ func Test_GetSingleNews(t *testing.T) {
 						err: nil,
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{fmt.Errorf("any")},
+					saveObject: saveObject{nil},
+				},
 			},
 			in: inputParam{newsID: 124312},
 			mustReturn: presentation.GetNewsResponse{
@@ -261,8 +279,11 @@ func Test_GetSingleNews(t *testing.T) {
 			uc := Usecase{
 				repositories: tc.repository,
 			}
-
-			got, err := uc.GetSingleNews(tc.in.newsID)
+			c := gin.Context{
+				Request: &http.Request{RequestURI: "ASD"},
+			}
+			log.Println(c.Request.RequestURI)
+			got, err := uc.GetSingleNews(&c, tc.in.newsID)
 
 			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, got) {
 				tt.Error(response.InternalTestError{
@@ -297,6 +318,10 @@ func Test_GetNews(t *testing.T) {
 				NewsDataRepository: &MockNewsRepository{
 					getBulkNews: getBulkNews{err: fmt.Errorf("AXDCZ")},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{err: fmt.Errorf("any")},
+					saveObject: saveObject{err: fmt.Errorf("any")},
+				},
 			},
 			in: inputParam{
 				paginationString: "eyJvZmZzZXQiIDogMSwgImNvdW50IiA6IDd9",
@@ -323,6 +348,10 @@ func Test_GetNews(t *testing.T) {
 							},
 						},
 					},
+				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{err: fmt.Errorf("any")},
+					saveObject: saveObject{err: fmt.Errorf("any")},
 				},
 			},
 			in: inputParam{
@@ -351,6 +380,10 @@ func Test_GetNews(t *testing.T) {
 						},
 						err: nil,
 					},
+				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{err: fmt.Errorf("any")},
+					saveObject: saveObject{err: fmt.Errorf("any")},
 				},
 			},
 			in: inputParam{
@@ -391,6 +424,10 @@ func Test_GetNews(t *testing.T) {
 						err: nil,
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					getObject:  getObject{err: fmt.Errorf("any")},
+					saveObject: saveObject{err: fmt.Errorf("any")},
+				},
 			},
 			in: inputParam{
 				paginationString: "eyJvZmZzZXQiIDogMSwgImNvdW50IiA6IDd9",
@@ -418,7 +455,10 @@ func Test_GetNews(t *testing.T) {
 				repositories: tc.repository,
 			}
 
-			got, err := uc.GetNews(tc.in.paginationString, tc.in.filterString)
+			c := gin.Context{
+				Request: &http.Request{RequestURI: "Aasda"},
+			}
+			got, err := uc.GetNews(&c, tc.in.paginationString, tc.in.filterString)
 
 			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, got) {
 				tt.Error(response.InternalTestError{
@@ -461,6 +501,9 @@ func Test_AssignNewsWithNewsTopic(t *testing.T) {
 					createBulkNewsTopicsAssoc: createBulkNewsTopicsAssoc{
 						err: nil,
 					},
+				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					flushAll: flushAll{nil},
 				},
 			},
 			in: presentation.CreateNewsTopicsAssoc{
@@ -520,6 +563,9 @@ func Test_AssignNewsWithNewsTags(t *testing.T) {
 					createBulkNewsTagsAssoc: createBulkNewsTagsAssoc{
 						err: nil,
 					},
+				},
+				NewsRedisRepository: &MockNewsRedisRepository{
+					flushAll: flushAll{nil},
 				},
 			},
 			in: presentation.CreateNewsTagsAssoc{

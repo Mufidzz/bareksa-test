@@ -31,4 +31,5 @@ type AssignNewsAssocRepository interface {
 type NewsRedisRepository interface {
 	GetObject(key string, dest interface{}) error
 	SaveObject(key string, value interface{}) error
+	FlushAll() error
 }
