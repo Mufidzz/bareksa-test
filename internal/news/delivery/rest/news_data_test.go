@@ -538,3 +538,161 @@ func Test_HandleDeleteSingleNews(t *testing.T) {
 		})
 	}
 }
+
+func Test_HandleAssignNewsWithNewsTopics(t *testing.T) {
+	testcases := []struct {
+		name           string
+		url            string
+		body           string
+		mustReturn     interface{}
+		mustReturnCode int
+		handler        *HTTPHandler
+	}{
+		{
+			name: "Failed - Invalid JSON",
+			mustReturn: response.ErrorResponse{
+				Success: false,
+				Message: "Failed Binding JSON",
+				Type:    0,
+				Data:    presentation.CreateNewsTopicsAssoc{},
+			},
+			mustReturnCode: http.StatusBadRequest,
+			body:           "",
+			url:            "/assign/news/news-topic",
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil, nil),
+		},
+		{
+			name: "Failed - Usecase Return Error",
+			mustReturn: response.ErrorResponse{
+				Success: false,
+				Message: "Failed Run Assign News With News Topic",
+				Type:    0,
+				Data:    nil,
+			},
+			mustReturnCode: http.StatusBadRequest,
+			body:           `{"news_id" : 1, "news_topic_id" : [1,2,3]}`,
+			url:            "/assign/news/news-topic",
+			handler: NewHTTP(nil, &MockNewsDataUC{
+				assignNewsWithNewsTopic: assignNewsWithNewsTopic{err: fmt.Errorf("Adwde")},
+			}, nil, nil),
+		},
+		{
+			name:           "Success",
+			mustReturn:     "",
+			mustReturnCode: http.StatusNoContent,
+			body:           `{"news_id" : 1, "news_topic_id" : [1,2,3]}`,
+			url:            "/assign/news/news-topic",
+			handler: NewHTTP(nil, &MockNewsDataUC{
+				createSingleNews: createSingleNews{err: nil},
+			}, nil, nil),
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(tt *testing.T) {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest("POST", tc.url, bytes.NewBuffer([]byte(tc.body)))
+
+			router := gin.Default()
+			router.POST("/assign/news/news-topic", tc.handler.HandleAssignNewsWithNewsTopics)
+			router.ServeHTTP(w, req)
+
+			var jsonMustResponse []byte
+			var err error
+			if tc.mustReturn != "" {
+				jsonMustResponse, err = json.Marshal(tc.mustReturn)
+				if err != nil {
+					tt.Fatal("Failed Creating JSON String")
+				}
+			}
+
+			if tc.mustReturnCode != w.Code || !reflect.DeepEqual(jsonMustResponse, w.Body.Bytes()) {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_HandleCreateSingleNews",
+					Description:  "Testcase run Test_HandleCreateSingleNews",
+					Trace:        fmt.Sprintf("got %s, expected %v", w.Body.String(), string(jsonMustResponse)),
+				}.Error())
+			}
+		})
+	}
+}
+
+func Test_HandleAssignNewsWithNewsTags(t *testing.T) {
+	testcases := []struct {
+		name           string
+		url            string
+		body           string
+		mustReturn     interface{}
+		mustReturnCode int
+		handler        *HTTPHandler
+	}{
+		{
+			name: "Failed - Invalid JSON",
+			mustReturn: response.ErrorResponse{
+				Success: false,
+				Message: "Failed Binding JSON",
+				Type:    0,
+				Data:    presentation.CreateNewsTagsAssoc{},
+			},
+			mustReturnCode: http.StatusBadRequest,
+			body:           "",
+			url:            "/assign/news/news-tag",
+			handler:        NewHTTP(nil, &MockNewsDataUC{}, nil, nil),
+		},
+		{
+			name: "Failed - Usecase Return Error",
+			mustReturn: response.ErrorResponse{
+				Success: false,
+				Message: "Failed Run Assign News With News Tags",
+				Type:    0,
+				Data:    nil,
+			},
+			mustReturnCode: http.StatusBadRequest,
+			body:           `{"news_id" : 1, "news_tag_id" : [1,2,3]}`,
+			url:            "/assign/news/news-tag",
+			handler: NewHTTP(nil, &MockNewsDataUC{
+				assignNewsWithNewsTag: assignNewsWithNewsTag{err: fmt.Errorf("Adwde")},
+			}, nil, nil),
+		},
+		{
+			name:           "Success",
+			mustReturn:     "",
+			mustReturnCode: http.StatusNoContent,
+			body:           `{"news_id" : 1, "news_tag_id" : [1,2,3]}`,
+			url:            "/assign/news/news-tag",
+			handler: NewHTTP(nil, &MockNewsDataUC{
+				createSingleNews: createSingleNews{err: nil},
+			}, nil, nil),
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(tt *testing.T) {
+			w := httptest.NewRecorder()
+			req, _ := http.NewRequest("POST", tc.url, bytes.NewBuffer([]byte(tc.body)))
+
+			router := gin.Default()
+			router.POST("/assign/news/news-tag", tc.handler.HandleAssignNewsWithNewsTags)
+			router.ServeHTTP(w, req)
+
+			var jsonMustResponse []byte
+			var err error
+			if tc.mustReturn != "" {
+				jsonMustResponse, err = json.Marshal(tc.mustReturn)
+				if err != nil {
+					tt.Fatal("Failed Creating JSON String")
+				}
+			}
+
+			if tc.mustReturnCode != w.Code || !reflect.DeepEqual(jsonMustResponse, w.Body.Bytes()) {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_HandleCreateSingleNews",
+					Description:  "Testcase run Test_HandleCreateSingleNews",
+					Trace:        fmt.Sprintf("got %s, expected %v", w.Body.String(), string(jsonMustResponse)),
+				}.Error())
+			}
+		})
+	}
+}
