@@ -79,7 +79,7 @@ func (uc *Usecase) AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc
 		logger.Error(response.InternalError{
 			Type:         "UC",
 			Name:         "News Data",
-			FunctionName: "CreateSingleNews",
+			FunctionName: "AssignNewsWithNewsTopic",
 			Description:  "Failed Flush data redis",
 			Trace:        err,
 		}.Error())
