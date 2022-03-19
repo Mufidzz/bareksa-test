@@ -1,6 +1,9 @@
 package rest
 
-import "github.com/Mufidzz/bareksa-test/presentation"
+import (
+	"github.com/Mufidzz/bareksa-test/presentation"
+	"github.com/gin-gonic/gin"
+)
 
 type MockNewsTagDataUC struct {
 	createNewsTags createNewsTags
@@ -38,6 +41,6 @@ func (mntduc *MockNewsTagDataUC) DeleteNewsTags(newsTopicID []int) (deletedID []
 func (mntduc *MockNewsTagDataUC) UpdateNewsTags(newNewsTags []presentation.UpdateNewsTagsRequest) (updatedID []int, err error) {
 	return mntduc.updateNewsTags.updatedID, mntduc.updateNewsTags.err
 }
-func (mntduc *MockNewsTagDataUC) GetNewsTags(paginationString, filterString string) (res []presentation.GetNewsTagsResponse, err error) {
+func (mntduc *MockNewsTagDataUC) GetNewsTags(ctx *gin.Context, paginationString, filterString string) (res []presentation.GetNewsTagsResponse, err error) {
 	return mntduc.getNewsTags.res, mntduc.getNewsTags.err
 }

@@ -21,14 +21,14 @@ type GetNewsResponse struct {
 }
 
 type CreateNewsRequest struct {
-	Title   string `db:"title"`
-	Content string `db:"content"`
-	Status  int    `db:"status"`
+	Title   string `db:"title" json:"title"`
+	Content string `db:"content" json:"content"`
+	Status  int    `db:"status" json:"status"`
 }
 
 type UpdateNewsRequest struct {
-	ID      int    `db:"id"`
-	Title   string `db:"title"`
-	Content string `db:"content"`
-	Status  int    `db:"status"`
+	ID      int    `db:"id" json:"id"`
+	Title   string `db:"title" json:"title"`
+	Content string `db:"content" json:"content"`
+	Status  int    `db:"status" json:"status"`
 }

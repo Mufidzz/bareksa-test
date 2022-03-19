@@ -109,7 +109,7 @@ func (uc *Usecase) AssignNewsWithNewsTag(in presentation.CreateNewsTagsAssoc) er
 func (uc *Usecase) GetSingleNews(ctx *gin.Context, newsId int) (presentation.GetNewsResponse, error) {
 	// Get From Redis First
 	var redisData presentation.GetNewsResponse
-	err := uc.repositories.GetObject("ASD", &redisData)
+	err := uc.repositories.GetObject(ctx.Request.RequestURI, &redisData)
 	if err == nil {
 		return redisData, nil
 	}
@@ -130,7 +130,7 @@ func (uc *Usecase) GetSingleNews(ctx *gin.Context, newsId int) (presentation.Get
 	}
 
 	// Save Result to Redis
-	err = uc.repositories.SaveObject("asd", news[0])
+	err = uc.repositories.SaveObject(ctx.Request.RequestURI, news[0])
 	if err != nil {
 		logger.Error(response.InternalError{
 			Type:         "UC",
