@@ -74,7 +74,7 @@ func Test_CreateTopics(t *testing.T) {
 
 			got, err := uc.CreateNewsTopics(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -153,7 +153,7 @@ func Test_DeleteNewsTopics(t *testing.T) {
 
 			got, err := uc.DeleteNewsTopics(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -280,7 +280,7 @@ func Test_UpdateNewsTopics(t *testing.T) {
 
 			got, err := uc.UpdateNewsTopics(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -585,7 +585,7 @@ func Test_GetNewsTopics(t *testing.T) {
 
 			got, err := uc.GetNewsTopics(tc.in.paginationString, tc.in.filterString)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",

@@ -61,7 +61,7 @@ func Test_CreateSingleNews(t *testing.T) {
 
 			err := uc.CreateSingleNews(tc.in.newNews)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -127,7 +127,7 @@ func Test_UpdateSingleNews(t *testing.T) {
 
 			err := uc.UpdateSingleNews(tc.in.updatedNews)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_UpdateSingleNews",
@@ -183,7 +183,7 @@ func Test_DeleteSingleNews(t *testing.T) {
 
 			err := uc.DeleteSingleNews(tc.in.newsID)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_DeleteSingleNews",
@@ -264,7 +264,7 @@ func Test_GetSingleNews(t *testing.T) {
 
 			got, err := uc.GetSingleNews(tc.in.newsID)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, got) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, got) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_GetSingleNews",
@@ -420,7 +420,7 @@ func Test_GetNews(t *testing.T) {
 
 			got, err := uc.GetNews(tc.in.paginationString, tc.in.filterString)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, got) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, got) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_GetNews",
@@ -479,7 +479,7 @@ func Test_AssignNewsWithNewsTopic(t *testing.T) {
 
 			err := uc.AssignNewsWithNewsTopic(tc.in)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -537,8 +537,7 @@ func Test_AssignNewsWithNewsTags(t *testing.T) {
 			}
 
 			err := uc.AssignNewsWithNewsTag(tc.in)
-
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",

@@ -308,7 +308,7 @@ func Test_UpdateBulkNewsTopics(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.UpdateBulkNewsTopics(tc.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_Bulk_UpdateNewsTopics",
@@ -379,7 +379,7 @@ func Test_DeleteBulkNewsTopics(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.DeleteBulkNewsTopics(tc.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_Bulk_UpdateNewsTopics",
@@ -407,7 +407,7 @@ func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
 		{
 			name: "Failed - SQL Return Error",
 			mockExp: func(mm sqlmock.Sqlmock) {
-				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+				mm.ExpectExec("INSERT INTO assoc_news_topics (.+) VALUES (.+)").
 					WillReturnError(fmt.Errorf("hello"))
 			},
 			in: []presentation.CreateNewsTopicsAssoc{
@@ -421,7 +421,7 @@ func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
 		{
 			name: "Failed - Not All Data Inserted",
 			mockExp: func(mm sqlmock.Sqlmock) {
-				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+				mm.ExpectExec("INSERT INTO assoc_news_topics (.+) VALUES (.+)").
 					WillReturnResult(sqlmock.NewResult(4, 12341))
 			},
 			in: []presentation.CreateNewsTopicsAssoc{
@@ -435,7 +435,7 @@ func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
 		{
 			name: "Success - Success Create New Rows",
 			mockExp: func(mm sqlmock.Sqlmock) {
-				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+				mm.ExpectExec("INSERT INTO assoc_news_topics (.+) VALUES (.+)").
 					WillReturnResult(sqlmock.NewResult(4, 4))
 			},
 			in: []presentation.CreateNewsTopicsAssoc{
@@ -453,7 +453,7 @@ func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
 			tc.mockExp(mock)
 			err := pgDB.CreateBulkNewsTopicsAssoc(tc.in)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateBulkNewsTopicsAssoc",
