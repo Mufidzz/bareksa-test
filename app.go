@@ -21,6 +21,9 @@ func main() {
 		Password: "",
 		DB:       0,
 	})
+	if err != nil {
+		log.Printf("[DB Init] error initialize redis, trace %v", err)
+	}
 
 	StartREST(postgreRepo, redisRepo)
 }
