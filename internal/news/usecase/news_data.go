@@ -54,6 +54,16 @@ func (uc *Usecase) DeleteSingleNews(newsId int) error {
 		return err
 	}
 
+	err = uc.repositories.CleanNewsTopicsAssoc([]int{newsId})
+	if err != nil {
+		return err
+	}
+
+	err = uc.repositories.CleanNewsTagAssoc([]int{newsId})
+	if err != nil {
+		return err
+	}
+
 	err = uc.repositories.FlushAll()
 	if err != nil {
 		logger.Error(response.InternalError{

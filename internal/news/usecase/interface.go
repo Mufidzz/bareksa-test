@@ -26,6 +26,8 @@ type NewsTagDataRepository interface {
 type AssignNewsAssocRepository interface {
 	CreateBulkNewsTopicsAssoc(in []presentation.CreateNewsTopicsAssoc) (err error)
 	CreateBulkNewsTagsAssoc(in []presentation.CreateNewsTagsAssoc) (err error)
+	CleanNewsTopicsAssoc(newsID []int) (err error)
+	CleanNewsTagAssoc(newsID []int) (err error)
 }
 
 type NewsRedisRepository interface {

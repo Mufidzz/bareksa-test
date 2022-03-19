@@ -49,7 +49,7 @@ func (handler *HTTPHandler) HandleGetNews(ctx *gin.Context) {
 }
 
 func (handler *HTTPHandler) HandleGetSingleNews(ctx *gin.Context) {
-	newsID := ctx.Param("id")
+	newsID := ctx.Param("newsId")
 	if newsID == "" {
 		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
 			Success: false,
@@ -209,7 +209,7 @@ func (handler *HTTPHandler) HandleCreateSingleNews(ctx *gin.Context) {
 }
 
 func (handler *HTTPHandler) HandleDeleteSingleNews(ctx *gin.Context) {
-	newsID := ctx.Param("id")
+	newsID := ctx.Param("newsId")
 	if newsID == "" {
 		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
 			Success: false,

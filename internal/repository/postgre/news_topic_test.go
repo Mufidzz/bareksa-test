@@ -465,3 +465,55 @@ func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
 	}
 
 }
+
+func Test_CleanNewsTopicsAssoc(t *testing.T) {
+	pgDB, db, mock, err := initDB()
+	if err != nil {
+		t.Fatalf("Failed init Mock Database")
+	}
+	defer db.Close()
+
+	testcase := []struct {
+		name    string
+		in      []int
+		mockExp func(mm sqlmock.Sqlmock)
+		mustErr bool
+	}{
+		{
+			name: "Failed - SQL Return Error",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				mm.ExpectExec("DELETE FROM assoc_news_topics WHERE").
+					WillReturnError(fmt.Errorf("hello"))
+			},
+			in:      []int{1, 2, 3, 4},
+			mustErr: true,
+		},
+		{
+			name: "Success - Success Create New Rows",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				mm.ExpectExec("DELETE FROM assoc_news_topics WHERE").
+					WillReturnResult(sqlmock.NewResult(4, 4))
+			},
+			in: []int{1, 2, 3, 4},
+
+			mustErr: false,
+		},
+	}
+
+	for _, tc := range testcase {
+		t.Run(tc.name, func(tt *testing.T) {
+			tc.mockExp(mock)
+			err := pgDB.CleanNewsTopicsAssoc(tc.in)
+
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_CleanNewsTopicsAssoc",
+					Description:  "Testcase run unsuccessfully",
+					Trace:        fmt.Sprintf("mustErr %v, err %v", tc.mustErr, err),
+				}.Error())
+			}
+		})
+	}
+
+}

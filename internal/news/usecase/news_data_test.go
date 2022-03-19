@@ -163,6 +163,10 @@ func Test_DeleteSingleNews(t *testing.T) {
 				NewsDataRepository: &MockNewsRepository{
 					deleteBulkNews: deleteBulkNews{err: fmt.Errorf("AXDCZ")},
 				},
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					cleanNewsTagsAssoc:   cleanNewsTagsAssoc{err: nil},
+					cleanNewsTopicsAssoc: cleanNewsTopicsAssoc{err: nil},
+				},
 			},
 			in:      inputParam{newsID: 123},
 			mustErr: true,
@@ -179,6 +183,10 @@ func Test_DeleteSingleNews(t *testing.T) {
 				NewsRedisRepository: &MockNewsRedisRepository{flushAll: flushAll{
 					nil,
 				}},
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					cleanNewsTagsAssoc:   cleanNewsTagsAssoc{err: nil},
+					cleanNewsTopicsAssoc: cleanNewsTopicsAssoc{err: nil},
+				},
 			},
 			in:      inputParam{newsID: 124312},
 			mustErr: false,
