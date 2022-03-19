@@ -8,9 +8,6 @@ import (
 
 type Redis struct {
 	newsClient *redis.Client
-
-	//// Use Cmdable for Testing Purpose
-	//newsCmdable *redis.Cmdable
 }
 
 func New(newsRedisOption redis.Options) (*Redis, error) {

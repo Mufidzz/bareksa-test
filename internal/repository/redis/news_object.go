@@ -48,3 +48,18 @@ func (redis *Redis) SaveObject(key string, value interface{}) error {
 
 	return nil
 }
+
+func (redis *Redis) FlushAll() error {
+	res := redis.newsClient.FlushAll(context.Background())
+	if res.Err() != nil {
+		return response.InternalError{
+			Type:         "Repo",
+			Name:         "Redis",
+			FunctionName: "FlushAll",
+			Description:  "Failed to Flush database",
+			Trace:        res.Err(),
+		}.Error()
+	}
+
+	return nil
+}

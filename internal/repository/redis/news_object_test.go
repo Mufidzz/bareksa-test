@@ -142,3 +142,47 @@ func Test_GetObject(t *testing.T) {
 		})
 	}
 }
+
+func Test_FlushAll(t *testing.T) {
+	testcases := []struct {
+		name    string
+		mock    func(redismock.ClientMock)
+		mustErr bool
+	}{
+		{
+			name: "Success",
+			mock: func(mock redismock.ClientMock) {
+				mock.ExpectFlushAll().
+					SetVal("")
+			},
+			mustErr: false,
+		},
+		{
+			name: "Failed",
+			mock: func(mock redismock.ClientMock) {
+				mock.ExpectFlushAll().
+					SetErr(fmt.Errorf("FFF"))
+			},
+			mustErr: true,
+		},
+	}
+	for _, tc := range testcases {
+		t.Run(tc.name, func(tt *testing.T) {
+			db, mock := redismock.NewClientMock()
+			tc.mock(mock)
+
+			r := NewFromObject(db)
+
+			err := r.FlushAll()
+
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
+				tt.Error(response.InternalTestError{
+					Name:         tc.name,
+					FunctionName: "Test_SaveObject",
+					Description:  "Failed Running Testcase",
+					Trace:        err,
+				})
+			}
+		})
+	}
+}
