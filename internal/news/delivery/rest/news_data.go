@@ -261,3 +261,74 @@ func (handler *HTTPHandler) HandleDeleteSingleNews(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusNoContent, "")
 }
+
+func (handler *HTTPHandler) HandleAssignNewsWithNewsTopics(ctx *gin.Context) {
+	var newsTopicAssoc presentation.CreateNewsTopicsAssoc
+
+	err := ctx.BindJSON(&newsTopicAssoc)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
+			Success: false,
+			Message: "Failed Binding JSON",
+			Type:    0,
+			Data:    newsTopicAssoc,
+		})
+		return
+	}
+
+	err = handler.usecases.AssignNewsWithNewsTopic(newsTopicAssoc)
+	if err != nil {
+		logger.Error(response.InternalError{
+			Type:         "Handler",
+			Name:         "News Data",
+			FunctionName: "HandleAssignNewsWithNewsTopics",
+			Description:  "error running usecase",
+			Trace:        err,
+		}.Error())
+
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
+			Success: false,
+			Message: "Failed Run Assign News With News Topic",
+			Type:    0,
+			Data:    nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, "")
+}
+
+func (handler *HTTPHandler) HandleAssignNewsWithNewsTags(ctx *gin.Context) {
+	var newsTagAssoc presentation.CreateNewsTagsAssoc
+
+	err := ctx.BindJSON(&newsTagAssoc)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
+			Success: false,
+			Message: "Failed Binding JSON",
+			Type:    0,
+			Data:    newsTagAssoc,
+		})
+		return
+	}
+
+	err = handler.usecases.AssignNewsWithNewsTag(newsTagAssoc)
+	if err != nil {
+		logger.Error(response.InternalError{
+			Type:         "Handler",
+			Name:         "News Data",
+			FunctionName: "HandleAssignNewsWithNewsTopics",
+			Description:  "error running usecase",
+			Trace:        err,
+		}.Error())
+
+		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
+			Success: false,
+			Message: "Failed Run Assign News With News Tags",
+			Type:    0,
+			Data:    nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusNoContent, "")
+
+}

@@ -204,8 +204,8 @@ func (db *Postgre) CreateBulkNewsTagsAssoc(in []presentation.CreateNewsTagsAssoc
 	dataCount := 0
 
 	for _, v := range in {
+		dataCount += len(v.NewsTagID)
 		for _, newsTagID := range v.NewsTagID {
-			dataCount += len(v.NewsTagID)
 			q = fmt.Sprintf("%s ($%d, $%d),", q, paramCount, paramCount+1)
 			paramArgs = append(paramArgs, v.NewsID, newsTagID)
 			paramCount += queryParamLen

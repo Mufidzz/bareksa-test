@@ -31,6 +31,12 @@ func NewHTTP(
 
 func (handler *HTTPHandler) SetRoutes() {
 	router := handler.router
+	assign := router.Group("/assign")
+	{
+		assign.POST("/news/news-topic", handler.HandleAssignNewsWithNewsTopics)
+		assign.POST("/news/news-tag", handler.HandleAssignNewsWithNewsTags)
+	}
+
 	news := router.Group("/news")
 	{
 		news.GET("/", handler.HandleGetNews)

@@ -8,6 +8,9 @@ type NewsDataUC interface {
 	DeleteSingleNews(newsId int) error
 	GetSingleNews(newsId int) (presentation.GetNewsResponse, error)
 	GetNews(paginationString, filterString string) (res []presentation.GetNewsResponse, err error)
+
+	AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc) error
+	AssignNewsWithNewsTag(in presentation.CreateNewsTagsAssoc) error
 }
 
 type NewsTopicDataUC interface {

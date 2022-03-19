@@ -3,11 +3,21 @@ package rest
 import "github.com/Mufidzz/bareksa-test/presentation"
 
 type MockNewsDataUC struct {
-	createSingleNews createSingleNews
-	updateSingleNews updateSingleNews
-	deleteSingleNews deleteSingleNews
-	getSingleNews    getSingleNews
-	getNews          getNews
+	createSingleNews        createSingleNews
+	updateSingleNews        updateSingleNews
+	deleteSingleNews        deleteSingleNews
+	getSingleNews           getSingleNews
+	getNews                 getNews
+	assignNewsWithNewsTopic assignNewsWithNewsTopic
+	assignNewsWithNewsTag   assignNewsWithNewsTag
+}
+
+type assignNewsWithNewsTopic struct {
+	err error
+}
+
+type assignNewsWithNewsTag struct {
+	err error
 }
 
 type createSingleNews struct {
@@ -46,4 +56,10 @@ func (mnduc *MockNewsDataUC) GetSingleNews(newsId int) (presentation.GetNewsResp
 }
 func (mnduc *MockNewsDataUC) GetNews(paginationString, filterString string) (res []presentation.GetNewsResponse, err error) {
 	return mnduc.getNews.res, mnduc.getNews.err
+}
+func (mnduc *MockNewsDataUC) AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc) error {
+	return mnduc.assignNewsWithNewsTopic.err
+}
+func (mnduc *MockNewsDataUC) AssignNewsWithNewsTag(in presentation.CreateNewsTagsAssoc) error {
+	return mnduc.assignNewsWithNewsTag.err
 }
