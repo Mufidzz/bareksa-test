@@ -61,7 +61,7 @@ func Test_CreateBulkNewsTags(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.CreateBulkNewsTags(tc.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateBulkNewsTags",
@@ -199,7 +199,7 @@ func Test_GetBulkNewsTags(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.GetBulkNewsTags(tc.pagination, tc.filter)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_GetBulkNewsTags",
@@ -266,7 +266,7 @@ func Test_UpdateBulkNewsTags(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.UpdateBulkNewsTags(tc.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_UpdateBulkNewsTags",
@@ -336,7 +336,7 @@ func Test_DeleteBulkNewsTags(t *testing.T) {
 			tc.mockExp(mock)
 			res, err := pgDB.DeleteBulkNewsTags(tc.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(tc.mustReturn, res) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(tc.mustReturn, res) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_DeleteBulkNewsTags",
@@ -410,7 +410,7 @@ func Test_CreateBulkNewsTagsAssoc(t *testing.T) {
 			tc.mockExp(mock)
 			err := pgDB.CreateBulkNewsTagsAssoc(tc.in)
 
-			if tc.mustErr && err == nil {
+			if (tc.mustErr && err == nil) || (!tc.mustErr && err != nil) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateBulkNewsTagsAssoc",

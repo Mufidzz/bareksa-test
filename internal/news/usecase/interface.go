@@ -27,3 +27,9 @@ type AssignNewsAssocRepository interface {
 	CreateBulkNewsTopicsAssoc(in []presentation.CreateNewsTopicsAssoc) (err error)
 	CreateBulkNewsTagsAssoc(in []presentation.CreateNewsTagsAssoc) (err error)
 }
+
+type NewsRedisRepository interface {
+	GetObject(key string, dest interface{}) error
+	SaveObject(key string, value interface{}) error
+	FlushAll() error
+}

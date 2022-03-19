@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/Mufidzz/bareksa-test/pkg/response"
 	"github.com/Mufidzz/bareksa-test/presentation"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	"reflect"
 	"testing"
 )
@@ -74,7 +76,7 @@ func Test_CreateTags(t *testing.T) {
 
 			got, err := uc.CreateNewsTags(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -153,7 +155,7 @@ func Test_DeleteNewsTags(t *testing.T) {
 
 			got, err := uc.DeleteNewsTags(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -280,7 +282,7 @@ func Test_UpdateNewsTags(t *testing.T) {
 
 			got, err := uc.UpdateNewsTags(tc.in.in)
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",
@@ -313,6 +315,7 @@ func Test_GetNewsTags(t *testing.T) {
 						err: fmt.Errorf("ASD"),
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("X")}, saveObject: saveObject{err: nil}},
 			},
 			in:         inputParam{},
 			mustReturn: nil,
@@ -339,6 +342,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{},
@@ -379,6 +383,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -421,6 +426,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -463,6 +469,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -506,6 +513,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -536,6 +544,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -566,6 +575,7 @@ func Test_GetNewsTags(t *testing.T) {
 						},
 					},
 				},
+				NewsRedisRepository: &MockNewsRedisRepository{getObject: getObject{fmt.Errorf("s")}, saveObject: saveObject{err: nil}},
 			},
 
 			in: inputParam{
@@ -583,9 +593,11 @@ func Test_GetNewsTags(t *testing.T) {
 				repositories: tc.repository,
 			}
 
-			got, err := uc.GetNewsTags(tc.in.paginationString, tc.in.filterString)
+			ctx := gin.Context{Request: &http.Request{RequestURI: "ADAWD"}}
 
-			if (tc.mustErr && err == nil) || !reflect.DeepEqual(got, tc.mustReturn) {
+			got, err := uc.GetNewsTags(&ctx, tc.in.paginationString, tc.in.filterString)
+
+			if ((tc.mustErr && err == nil) || (!tc.mustErr && err != nil)) || !reflect.DeepEqual(got, tc.mustReturn) {
 				tt.Error(response.InternalTestError{
 					Name:         tt.Name(),
 					FunctionName: "Test_CreateSingleNews",

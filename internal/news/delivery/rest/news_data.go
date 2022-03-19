@@ -22,7 +22,7 @@ func (handler *HTTPHandler) HandleGetNews(ctx *gin.Context) {
 		return
 	}
 
-	news, err := handler.usecases.GetNews(paginationString, filterString)
+	news, err := handler.usecases.GetNews(ctx, paginationString, filterString)
 	if err != nil {
 		logger.Error(response.InternalError{
 			Type:         "Handler",
@@ -79,7 +79,7 @@ func (handler *HTTPHandler) HandleGetSingleNews(ctx *gin.Context) {
 		return
 	}
 
-	news, err := handler.usecases.GetSingleNews(intNewsID)
+	news, err := handler.usecases.GetSingleNews(ctx, intNewsID)
 	if err != nil {
 		logger.Error(response.InternalError{
 			Type:         "Handler",

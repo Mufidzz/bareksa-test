@@ -12,7 +12,7 @@ import (
 func (handler *HTTPHandler) HandleGetNewsTag(ctx *gin.Context) {
 	filterString, paginationString := ctx.Query("filter"), ctx.Query("pagination")
 
-	news, err := handler.usecases.GetNewsTags(paginationString, filterString)
+	news, err := handler.usecases.GetNewsTags(ctx, paginationString, filterString)
 	if err != nil {
 		logger.Error(response.InternalError{
 			Type:         "Handler",

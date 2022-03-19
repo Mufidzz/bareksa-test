@@ -1,6 +1,9 @@
 package rest
 
-import "github.com/Mufidzz/bareksa-test/presentation"
+import (
+	"github.com/Mufidzz/bareksa-test/presentation"
+	"github.com/gin-gonic/gin"
+)
 
 type MockNewsDataUC struct {
 	createSingleNews        createSingleNews
@@ -51,10 +54,10 @@ func (mnduc *MockNewsDataUC) UpdateSingleNews(updatedNews presentation.UpdateNew
 func (mnduc *MockNewsDataUC) DeleteSingleNews(newsId int) error {
 	return mnduc.deleteSingleNews.err
 }
-func (mnduc *MockNewsDataUC) GetSingleNews(newsId int) (presentation.GetNewsResponse, error) {
+func (mnduc *MockNewsDataUC) GetSingleNews(ctx *gin.Context, newsId int) (presentation.GetNewsResponse, error) {
 	return mnduc.getSingleNews.res, mnduc.getSingleNews.err
 }
-func (mnduc *MockNewsDataUC) GetNews(paginationString, filterString string) (res []presentation.GetNewsResponse, err error) {
+func (mnduc *MockNewsDataUC) GetNews(ctx *gin.Context, paginationString, filterString string) (res []presentation.GetNewsResponse, err error) {
 	return mnduc.getNews.res, mnduc.getNews.err
 }
 func (mnduc *MockNewsDataUC) AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc) error {

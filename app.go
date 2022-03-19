@@ -3,8 +3,10 @@ package main
 import (
 	"github.com/Mufidzz/bareksa-test/internal/news"
 	"github.com/Mufidzz/bareksa-test/internal/repository/postgre"
+	redisRepository "github.com/Mufidzz/bareksa-test/internal/repository/redis"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis/v8"
 	"log"
 )
 
@@ -14,10 +16,16 @@ func main() {
 		log.Printf("[DB Init] error initialize database, trace %v", err)
 	}
 
-	StartREST(postgreRepo)
+	redisRepo, err := redisRepository.New(redis.Options{
+		Addr:     "localhost:6379",
+		Password: "",
+		DB:       0,
+	})
+
+	StartREST(postgreRepo, redisRepo)
 }
 
-func StartREST(pg *postgre.Postgre) {
+func StartREST(pg *postgre.Postgre, redisRepo *redisRepository.Redis) {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
 		AllowMethods:     []string{"PUT", "POST", "GET", "DELETE"},
@@ -27,7 +35,7 @@ func StartREST(pg *postgre.Postgre) {
 		AllowAllOrigins:  true,
 	}))
 
-	news.StartHTTP(router, pg)
+	news.StartHTTP(router, pg, redisRepo)
 
 	router.Run(":4456")
 }
