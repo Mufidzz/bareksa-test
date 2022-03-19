@@ -246,3 +246,20 @@ func (db *Postgre) CreateBulkNewsTagsAssoc(in []presentation.CreateNewsTagsAssoc
 
 	return nil
 }
+
+func (db *Postgre) CleanNewsTagAssoc(newsID []int) (err error) {
+	q := `DELETE FROM assoc_news_tags WHERE news_id = ANY($1)`
+
+	_, err = db.newsDatabase.Master.Exec(q, pq.Array(newsID))
+	if err != nil {
+		return response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "CleanNewsTagAssoc",
+			Description:  "failed running queryx",
+			Trace:        err,
+		}.Error()
+	}
+
+	return nil
+}
