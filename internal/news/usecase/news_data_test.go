@@ -431,3 +431,121 @@ func Test_GetNews(t *testing.T) {
 		})
 	}
 }
+
+func Test_AssignNewsWithNewsTopic(t *testing.T) {
+	testcases := []struct {
+		name       string
+		repository *Repositories
+		in         presentation.CreateNewsTopicsAssoc
+		mustErr    bool
+	}{
+		{
+			name: "Failed - Repo return error",
+			repository: &Repositories{
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					createBulkNewsTopicsAssoc: createBulkNewsTopicsAssoc{
+						err: fmt.Errorf("awd"),
+					},
+				},
+			},
+			in: presentation.CreateNewsTopicsAssoc{
+				NewsID:       1,
+				NewsTopicsID: []int{1, 2, 3},
+			},
+			mustErr: true,
+		},
+		{
+			name: "Success - Repo return no error",
+			repository: &Repositories{
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					createBulkNewsTopicsAssoc: createBulkNewsTopicsAssoc{
+						err: nil,
+					},
+				},
+			},
+			in: presentation.CreateNewsTopicsAssoc{
+				NewsID:       1,
+				NewsTopicsID: []int{1, 2, 3},
+			},
+			mustErr: false,
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(tt *testing.T) {
+			uc := Usecase{
+				repositories: tc.repository,
+			}
+
+			err := uc.AssignNewsWithNewsTopic(tc.in)
+
+			if tc.mustErr && err == nil {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_CreateSingleNews",
+					Description:  "Testcase run unsuccessfully",
+					Trace:        fmt.Sprintf("mustErr %v, err %v", tc.mustErr, err),
+				}.Error())
+			}
+		})
+	}
+}
+
+func Test_AssignNewsWithNewsTags(t *testing.T) {
+	testcases := []struct {
+		name       string
+		repository *Repositories
+		in         presentation.CreateNewsTagsAssoc
+		mustErr    bool
+	}{
+		{
+			name: "Failed - Repo return error",
+			repository: &Repositories{
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					createBulkNewsTagsAssoc: createBulkNewsTagsAssoc{
+						err: fmt.Errorf("awd"),
+					},
+				},
+			},
+			in: presentation.CreateNewsTagsAssoc{
+				NewsID:    1,
+				NewsTagID: []int{1, 2, 3},
+			},
+			mustErr: true,
+		},
+		{
+			name: "Success - Repo return no error",
+			repository: &Repositories{
+				AssignNewsAssocRepository: &MockAssignNewsAssocRepository{
+					createBulkNewsTagsAssoc: createBulkNewsTagsAssoc{
+						err: nil,
+					},
+				},
+			},
+			in: presentation.CreateNewsTagsAssoc{
+				NewsID:    1,
+				NewsTagID: []int{1, 2, 3},
+			},
+			mustErr: false,
+		},
+	}
+
+	for _, tc := range testcases {
+		t.Run(tc.name, func(tt *testing.T) {
+			uc := Usecase{
+				repositories: tc.repository,
+			}
+
+			err := uc.AssignNewsWithNewsTag(tc.in)
+
+			if tc.mustErr && err == nil {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_CreateSingleNews",
+					Description:  "Testcase run unsuccessfully",
+					Trace:        fmt.Sprintf("mustErr %v, err %v", tc.mustErr, err),
+				}.Error())
+			}
+		})
+	}
+}

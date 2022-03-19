@@ -22,3 +22,8 @@ type NewsTagDataRepository interface {
 	UpdateBulkNewsTags(in []presentation.UpdateNewsTagsRequest) (updatedID []int, err error)
 	DeleteBulkNewsTags(newsTopicID []int) (deletedID []int, err error)
 }
+
+type AssignNewsAssocRepository interface {
+	CreateBulkNewsTopicsAssoc(in []presentation.CreateNewsTopicsAssoc) (err error)
+	CreateBulkNewsTagsAssoc(in []presentation.CreateNewsTagsAssoc) (err error)
+}

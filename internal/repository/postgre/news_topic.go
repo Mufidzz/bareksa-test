@@ -192,3 +192,57 @@ func (db *Postgre) DeleteBulkNewsTopics(newsTopicID []int) (deletedID []int, err
 
 	return deletedID, nil
 }
+
+func (db *Postgre) CreateBulkNewsTopicsAssoc(in []presentation.CreateNewsTopicsAssoc) (err error) {
+	q := `INSERT INTO assoc_news_topics (news_id, news_topic_id) VALUES`
+
+	queryParamLen := 2
+
+	paramCount := 1
+	paramArgs := []interface{}{}
+
+	dataCount := 0
+
+	for _, v := range in {
+		for _, newsTopicID := range v.NewsTopicsID {
+			dataCount += len(v.NewsTopicsID)
+			q = fmt.Sprintf("%s ($%d, $%d),", q, paramCount, paramCount+1)
+			paramArgs = append(paramArgs, v.NewsID, newsTopicID)
+			paramCount += queryParamLen
+		}
+	}
+
+	res, err := db.newsDatabase.Master.Exec(q[:len(q)-1], paramArgs...)
+	if err != nil {
+		return response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "CreateNewsTopicsAssoc",
+			Description:  "failed running queryx",
+			Trace:        err,
+		}.Error()
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "CreateNewsTopicsAssoc",
+			Description:  "failed get number of rows affected",
+			Trace:        err,
+		}.Error()
+	}
+
+	if rowsAffected != int64(dataCount) {
+		return response.InternalError{
+			Type:         "Repo",
+			Name:         "Postgre",
+			FunctionName: "CreateNewsTopicsAssoc",
+			Description:  "not all data inserted",
+			Trace:        fmt.Errorf("affected rows : %v, data count : %v", rowsAffected, dataCount),
+		}.Error()
+	}
+
+	return nil
+}

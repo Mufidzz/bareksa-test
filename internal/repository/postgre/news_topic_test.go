@@ -390,3 +390,78 @@ func Test_DeleteBulkNewsTopics(t *testing.T) {
 		})
 	}
 }
+
+func Test_CreateBulkNewsTopicsAssoc(t *testing.T) {
+	pgDB, db, mock, err := initDB()
+	if err != nil {
+		t.Fatalf("Failed init Mock Database")
+	}
+	defer db.Close()
+
+	testcase := []struct {
+		name    string
+		in      []presentation.CreateNewsTopicsAssoc
+		mockExp func(mm sqlmock.Sqlmock)
+		mustErr bool
+	}{
+		{
+			name: "Failed - SQL Return Error",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+					WillReturnError(fmt.Errorf("hello"))
+			},
+			in: []presentation.CreateNewsTopicsAssoc{
+				{
+					NewsID:       1,
+					NewsTopicsID: []int{1, 2, 3, 4},
+				},
+			},
+			mustErr: true,
+		},
+		{
+			name: "Failed - Not All Data Inserted",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+					WillReturnResult(sqlmock.NewResult(4, 12341))
+			},
+			in: []presentation.CreateNewsTopicsAssoc{
+				{
+					NewsID:       1,
+					NewsTopicsID: []int{1, 2, 3, 4},
+				},
+			},
+			mustErr: true,
+		},
+		{
+			name: "Success - Success Create New Rows",
+			mockExp: func(mm sqlmock.Sqlmock) {
+				mm.ExpectExec("INSERT INTO assoc_news_tags (.+) VALUES (.+)").
+					WillReturnResult(sqlmock.NewResult(4, 4))
+			},
+			in: []presentation.CreateNewsTopicsAssoc{
+				{
+					NewsID:       1,
+					NewsTopicsID: []int{1, 2, 3, 4},
+				},
+			},
+			mustErr: false,
+		},
+	}
+
+	for _, tc := range testcase {
+		t.Run(tc.name, func(tt *testing.T) {
+			tc.mockExp(mock)
+			err := pgDB.CreateBulkNewsTopicsAssoc(tc.in)
+
+			if tc.mustErr && err == nil {
+				tt.Error(response.InternalTestError{
+					Name:         tt.Name(),
+					FunctionName: "Test_CreateBulkNewsTopicsAssoc",
+					Description:  "Testcase run unsuccessfully",
+					Trace:        fmt.Sprintf("mustErr %v, err %v", tc.mustErr, err),
+				}.Error())
+			}
+		})
+	}
+
+}
