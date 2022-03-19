@@ -71,6 +71,10 @@ func (uc *Usecase) GetNews(paginationString, filterString string) (res []present
 	return uc.repositories.GetBulkNews(pagination, newsFilter)
 }
 
-func (uc *Usecase) AssignNewsWithNewsTopic(newsId int, topicIDs []int) {
+func (uc *Usecase) AssignNewsWithNewsTopic(in presentation.CreateNewsTopicsAssoc) error {
+	return uc.repositories.CreateBulkNewsTopicsAssoc([]presentation.CreateNewsTopicsAssoc{in})
+}
 
+func (uc *Usecase) AssignNewsWithNewsTag(in presentation.CreateNewsTagsAssoc) error {
+	return uc.repositories.CreateBulkNewsTagsAssoc([]presentation.CreateNewsTagsAssoc{in})
 }

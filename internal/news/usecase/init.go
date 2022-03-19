@@ -4,6 +4,7 @@ type Repositories struct {
 	NewsDataRepository
 	NewsTopicDataRepository
 	NewsTagDataRepository
+	AssignNewsAssocRepository
 }
 
 type Usecase struct {
