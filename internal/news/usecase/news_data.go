@@ -140,6 +140,25 @@ func (uc *Usecase) GetSingleNews(ctx *gin.Context, newsId int) (presentation.Get
 	}
 
 	// Save Result to Redis
+	if len(news) <= 0 {
+		logger.Error(response.InternalError{
+			Type:         "UC",
+			Name:         "News Data",
+			FunctionName: "GetSingleNews",
+			Description:  "Data Not Found",
+			Trace:        err,
+		}.Error())
+
+		return presentation.GetNewsResponse{}, response.InternalError{
+			Type:         "UC",
+			Name:         "News Data",
+			FunctionName: "GetSingleNews",
+			Description:  "Data Not Found",
+			Trace:        err,
+		}.Error()
+
+	}
+
 	err = uc.repositories.SaveObject(ctx.Request.RequestURI, news[0])
 	if err != nil {
 		logger.Error(response.InternalError{
@@ -150,8 +169,8 @@ func (uc *Usecase) GetSingleNews(ctx *gin.Context, newsId int) (presentation.Get
 			Trace:        err,
 		}.Error())
 	}
+	return news[0], nil
 
-	return news[0], err
 }
 
 func (uc *Usecase) GetNews(ctx *gin.Context, paginationString, filterString string) (res []presentation.GetNewsResponse, err error) {

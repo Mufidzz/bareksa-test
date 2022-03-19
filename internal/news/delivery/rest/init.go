@@ -18,6 +18,7 @@ func NewHTTP(
 	newsDataUC NewsDataUC,
 	newsTopicDataUC NewsTopicDataUC,
 	newsTagDataUC NewsTagDataUC,
+
 ) *HTTPHandler {
 	return &HTTPHandler{
 		router: router,
@@ -40,7 +41,7 @@ func (handler *HTTPHandler) SetRoutes() {
 	news := router.Group("/news")
 	{
 		news.GET("/", handler.HandleGetNews)
-		news.GET("/:id", handler.HandleGetSingleNews)
+		news.GET("/:newsId", handler.HandleGetSingleNews)
 		news.PUT("/:newsId", handler.HandleUpdateSingleNews)
 		news.POST("/", handler.HandleCreateSingleNews)
 		news.DELETE("/:newsId", handler.HandleDeleteSingleNews)
