@@ -106,7 +106,7 @@ func (handler *HTTPHandler) HandleGetSingleNews(ctx *gin.Context) {
 }
 
 func (handler *HTTPHandler) HandleUpdateSingleNews(ctx *gin.Context) {
-	newsID := ctx.Param("id")
+	newsID := ctx.Param("newsId")
 	if newsID == "" {
 		ctx.JSON(http.StatusBadRequest, response.ErrorResponse{
 			Success: false,
